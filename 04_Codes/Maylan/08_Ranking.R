@@ -6,22 +6,19 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
-ProductRankFunc <- function(data,
-                            page,
-                            form.table,
-                            directory) {
-  ##---- P14_1 ----
-  form14.1 <- form.table %>% 
-    filter(Page == "P14_1")
+Ranking <- function(data,
+                    form,
+                    page,
+                    directory) {
   
-  table14.1.1 <- data %>% 
+  table1 <- data %>% 
     filter(MAT %in% head(sort(unique(data$MAT), decreasing = TRUE), 2),
-           !!sym(unique(form14.1$Summary1)) %in% unique(form14.1$Content)) %>% 
+           !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>% 
     group_by(period = MAT,
-             Product = !!sym(unique(form14.1$Summary1)),
-             Manufactor = !!sym(unique(form14.1$Summary2)),
-             `MNC/Local` = !!sym(unique(form14.1$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form14.1$Calculation)), na.rm = TRUE)) %>% 
+             Product = !!sym(unique(form$Summary1)),
+             Manufactor = !!sym(unique(form$Summary2)),
+             `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
+    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     group_by(period) %>% 
     mutate(Ranking = rank(-`RMB(Mn)`)) %>% 
@@ -30,14 +27,14 @@ ProductRankFunc <- function(data,
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking") %>% 
     arrange(!!sym(sort(unique(data$MAT), decreasing = TRUE)[1]))
   
-  table14.1.2 <- data %>% 
+  table2 <- data %>% 
     filter(YTD %in% head(sort(unique(data$YTD), decreasing = TRUE), 2),
-           !!sym(unique(form14.1$Summary1)) %in% unique(form14.1$Content)) %>% 
+           !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>% 
     group_by(period = YTD,
-             Product = !!sym(unique(form14.1$Summary1)),
-             Manufactor = !!sym(unique(form14.1$Summary2)),
-             `MNC/Local` = !!sym(unique(form14.1$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form14.1$Calculation)), na.rm = TRUE)) %>% 
+             Product = !!sym(unique(form$Summary1)),
+             Manufactor = !!sym(unique(form$Summary2)),
+             `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
+    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     group_by(period) %>% 
     mutate(Ranking = rank(-`RMB(Mn)`)) %>% 
@@ -45,14 +42,14 @@ ProductRankFunc <- function(data,
     setDT() %>% 
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
   
-  table14.1.3 <- data %>% 
+  table3 <- data %>% 
     filter(MTH %in% head(sort(unique(data$MTH), decreasing = TRUE), 2),
-           !!sym(unique(form14.1$Summary1)) %in% unique(form14.1$Content)) %>% 
+           !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>% 
     group_by(period = MTH,
-             Product = !!sym(unique(form14.1$Summary1)),
-             Manufactor = !!sym(unique(form14.1$Summary2)),
-             `MNC/Local` = !!sym(unique(form14.1$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form14.1$Calculation)), na.rm = TRUE)) %>% 
+             Product = !!sym(unique(form$Summary1)),
+             Manufactor = !!sym(unique(form$Summary2)),
+             `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
+    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     group_by(period) %>% 
     mutate(Ranking = rank(-`RMB(Mn)`)) %>% 
@@ -60,18 +57,18 @@ ProductRankFunc <- function(data,
     setDT() %>% 
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
   
-  table14.1.4 <- data %>% 
+  table4 <- data %>% 
     filter(MAT %in% head(sort(unique(data$MAT), decreasing = TRUE), 2)) %>% 
     group_by(period = MAT,
-             Product = !!sym(unique(form14.1$Summary1)),
-             Manufactor = !!sym(unique(form14.1$Summary2)),
-             `MNC/Local` = !!sym(unique(form14.1$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form14.1$Calculation)), na.rm = TRUE)) %>% 
+             Product = !!sym(unique(form$Summary1)),
+             Manufactor = !!sym(unique(form$Summary2)),
+             `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
+    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     group_by(period) %>% 
     mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE)) %>% 
     ungroup() %>% 
-    filter(Product %in% unique(form14.1$Content)) %>% 
+    filter(Product %in% unique(form$Display)) %>% 
     setDT() %>% 
     melt(id.vars = c("Product", "Manufactor", "MNC/Local", "period"), 
          variable.factor = FALSE, variable.name = "index", value.name = "value") %>% 
@@ -90,14 +87,14 @@ ProductRankFunc <- function(data,
     select(-period) %>% 
     mutate(index_type = sort(unique(data$MAT), decreasing = TRUE)[1])
   
-  table14.1.5 <- table14.1.4 %>% 
+  table5 <- table4 %>% 
     select(Product, Manufactor, `MNC/Local`) %>% 
     mutate(index_type = "Product Info")
   
-  table14.1 <- table14.1.1 %>% 
-    left_join(table14.1.2, by = c("Product", "Manufactor", "MNC/Local")) %>% 
-    left_join(table14.1.3, by = c("Product", "Manufactor", "MNC/Local")) %>% 
-    full_join(table14.1.4, by = c("Product", "Manufactor", "MNC/Local")) %>% 
+  table.file <- table1 %>% 
+    left_join(table2, by = c("Product", "Manufactor", "MNC/Local")) %>% 
+    left_join(table3, by = c("Product", "Manufactor", "MNC/Local")) %>% 
+    full_join(table4, by = c("Product", "Manufactor", "MNC/Local")) %>% 
     mutate(` ` = factor(Product, levels = Product)) %>% 
     tabular(` ` ~ 
               Heading("Ranking") * identity * 
@@ -111,8 +108,7 @@ ProductRankFunc <- function(data,
               (`RMB(Mn)` + `Growth%` + `Share%`),
             data = .)
   
-  
-  list(table14.1)
+  table.file
 }
 
 

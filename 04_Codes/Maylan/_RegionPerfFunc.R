@@ -7,12 +7,9 @@
 
 
 RegionPerfFunc <- function(data,
-                           page,
                            form.table,
+                           page,
                            directory) {
-  ##---- P21_1 ----
-  form21.1 <- form.table %>% 
-    filter(Page == "P21_1")
   
   table21.1.1 <- data %>% 
     group_by(period = !!sym(form21.1), product) %>% 

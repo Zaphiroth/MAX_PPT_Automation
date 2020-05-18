@@ -9,9 +9,9 @@
 ##---- Readin ----
 raw.data <- read.xlsx("02_Inputs/乙肝MAX2016-2019.xlsx")
 
-form.table <- read.xlsx("03_Outputs/Form_table.xlsx")
+form.table <- read.xlsx("02_Inputs/Form_table.xlsx")
 
-
+##
 ##---- Period ----
 latest.date <- sort(unique(raw.data$Date), decreasing = TRUE)
 
@@ -60,8 +60,47 @@ data <- raw.data %>%
   filter(!is.na(MAT), !is.na(YTD))
 
 
+##---- Generation function ----
+source("04_Codes/Maylan/02_MarketSize.R", encoding = "UTF-8")
+source("04_Codes/Maylan/03_SubMarketShare.R", encoding = "UTF-8")
+source("04_Codes/Maylan/04_SubMarketGrowth.R", encoding = "UTF-8")
+source("04_Codes/Maylan/05_Performance.R", encoding = "UTF-8")
+source("04_Codes/Maylan/06_Trend.R", encoding = "UTF-8")
+source("04_Codes/Maylan/07_ShareTrend.R", encoding = "UTF-8")
 
-
+GenerateFile <- function(data,
+                         form.table,
+                         page,
+                         directory) {
+  ##---- Identify table type ----
+  form <- form.table %>% 
+    filter(Page == page)
+  
+  type <- form %>% 
+    distinct(Type) %>% 
+    unlist()
+  
+  ##---- Calculate function ----
+  if (type == "MarketSize") {
+    MarketSize(data, form, page, directory)
+    
+  } else if (type == "SubMarketShare") {
+    SubMarketShare(data, form, page, directory)
+    
+  } else if (type == "SubMarketGrowth") {
+    SubMarketGrowth(data, form, page, directory)
+    
+  } else if (type == "Performance") {
+    Performance(data, form, page, directory)
+    
+  } else if (type == "Trend") {
+    Trend(data, form, page, directory)
+    
+  } else if (type == "ShareTrend") {
+    ShareTrend(data, form, page, directory)
+    
+  }
+}
 
 
 
