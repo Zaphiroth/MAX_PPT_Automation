@@ -9,7 +9,7 @@
 ##---- Readin ----
 raw.data <- read.xlsx("02_Inputs/乙肝MAX2016-2019.xlsx")
 
-form.table <- read.xlsx("02_Inputs/Form_table.xlsx")
+form.table <- read.xlsx("03_Outputs/Form_table.xlsx")
 
 ##
 ##---- Period ----
