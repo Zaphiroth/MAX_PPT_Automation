@@ -67,6 +67,8 @@ source("04_Codes/Maylan/04_SubMarketGrowth.R", encoding = "UTF-8")
 source("04_Codes/Maylan/05_Performance.R", encoding = "UTF-8")
 source("04_Codes/Maylan/06_Trend.R", encoding = "UTF-8")
 source("04_Codes/Maylan/07_ShareTrend.R", encoding = "UTF-8")
+source("04_Codes/Maylan/08_Ranking.R", encoding = "UTF-8")
+source("04_Codes/Maylan/09_RegionPerformance1.R", encoding = "UTF-8")
 
 GenerateFile <- function(data,
                          form.table,
@@ -98,6 +100,12 @@ GenerateFile <- function(data,
     
   } else if (type == "ShareTrend") {
     ShareTrend(data, form, page, directory)
+    
+  } else if (type == "Ranking") {
+    Ranking(data, form, page, directory)
+    
+  } else if (type == "RegionPerformance1") {
+    RegionPerformance1(data, form, page, directory)
     
   }
 }

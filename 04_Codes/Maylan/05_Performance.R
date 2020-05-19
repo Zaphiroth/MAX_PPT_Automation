@@ -16,19 +16,19 @@ Performance <- function(data,
                             !!sym(unique(form$Summary1)), 
                             "Others")) %>% 
     group_by(period = MAT, summary) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     setDT() %>% 
-    dcast(summary ~ period, value.var = "RMB(Mn)") %>% 
+    dcast(summary ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "TTL Mkt") %>% 
     melt(id.vars = "summary", variable.factor = FALSE, 
-         variable.name = "period", value.name = "RMB(Mn)") %>% 
+         variable.name = "period", value.name = "value") %>% 
     group_by(period) %>% 
-    mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE) * 2) %>% 
+    mutate(`Share%` = value / sum(value, na.rm = TRUE) * 2) %>% 
     ungroup() %>% 
     group_by(summary) %>% 
     arrange(period) %>% 
-    mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1,
+    mutate(`Growth%` = value / lag(value) - 1,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`)) %>% 
     ungroup() %>% 
@@ -40,19 +40,19 @@ Performance <- function(data,
                             !!sym(unique(form$Summary1)), 
                             "Others")) %>% 
     group_by(period = YTD, summary) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     setDT() %>% 
-    dcast(summary ~ period, value.var = "RMB(Mn)") %>% 
+    dcast(summary ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "TTL Mkt") %>% 
     melt(id.vars = "summary", variable.factor = FALSE, 
-         variable.name = "period", value.name = "RMB(Mn)") %>% 
+         variable.name = "period", value.name = "value") %>% 
     group_by(period) %>% 
-    mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE) * 2) %>% 
+    mutate(`Share%` = value / sum(value, na.rm = TRUE) * 2) %>% 
     ungroup() %>% 
     group_by(summary) %>% 
     arrange(period) %>% 
-    mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1,
+    mutate(`Growth%` = value / lag(value) - 1,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`)) %>% 
     ungroup() %>% 
@@ -65,19 +65,19 @@ Performance <- function(data,
                             !!sym(unique(form$Summary1)), 
                             "Others")) %>% 
     group_by(period = MTH, summary) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     setDT() %>% 
-    dcast(summary ~ period, value.var = "RMB(Mn)") %>% 
+    dcast(summary ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "TTL Mkt") %>% 
     melt(id.vars = "summary", variable.factor = FALSE, 
-         variable.name = "period", value.name = "RMB(Mn)") %>% 
+         variable.name = "period", value.name = "value") %>% 
     group_by(period) %>% 
-    mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE) * 2) %>% 
+    mutate(`Share%` = value / sum(value, na.rm = TRUE) * 2) %>% 
     ungroup() %>% 
     group_by(summary) %>% 
     arrange(period) %>% 
-    mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1,
+    mutate(`Growth%` = value / lag(value) - 1,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`)) %>% 
     ungroup() %>% 
@@ -90,14 +90,14 @@ Performance <- function(data,
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local", 
                                      NA_character_))) %>% 
       group_by(period = MAT, summary) %>% 
-      summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
       ungroup() %>% 
       group_by(period) %>% 
-      mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE)) %>% 
+      mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
       ungroup() %>% 
       group_by(summary) %>% 
       arrange(period) %>% 
-      mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1,
+      mutate(`Growth%` = value / lag(value) - 1,
              `ΔShare%` = `Share%` - lag(`Share%`),
              EI = `Share%` / lag(`Share%`)) %>% 
       ungroup() %>% 
@@ -109,14 +109,14 @@ Performance <- function(data,
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local", 
                                      NA_character_))) %>% 
       group_by(period = YTD, summary) %>% 
-      summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
       ungroup() %>% 
       group_by(period) %>% 
-      mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE)) %>% 
+      mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
       ungroup() %>% 
       group_by(summary) %>% 
       arrange(period) %>% 
-      mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1,
+      mutate(`Growth%` = value / lag(value) - 1,
              `ΔShare%` = `Share%` - lag(`Share%`),
              EI = `Share%` / lag(`Share%`)) %>% 
       ungroup() %>% 
@@ -129,14 +129,14 @@ Performance <- function(data,
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local", 
                                      NA_character_))) %>% 
       group_by(period = MTH, summary) %>% 
-      summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
       ungroup() %>% 
       group_by(period) %>% 
-      mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE)) %>% 
+      mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
       ungroup() %>% 
       group_by(summary) %>% 
       arrange(period) %>% 
-      mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1,
+      mutate(`Growth%` = value / lag(value) - 1,
              `ΔShare%` = `Share%` - lag(`Share%`),
              EI = `Share%` / lag(`Share%`)) %>% 
       ungroup() %>% 
@@ -156,9 +156,10 @@ Performance <- function(data,
            period = factor(period, levels = c(unique(table1$period), 
                                               unique(table2$period), 
                                               unique(table3$period)))) %>% 
-    rename(!!sym(unique(form$Index)) := summary) %>% 
-    tabular(sym(unique(form$Index)) * Heading() ~ 
-              period * (`RMB(Mn)` + `Growth%` + `Share%` + `ΔShare%` + EI) * Heading() * identity, 
+    rename(` ` = summary,
+           !!sym(unique(form$Index)) := value) %>% 
+    tabular(` ` * Heading() ~ 
+              period * (sym(unique(form$Index)) + `Growth%` + `Share%` + `ΔShare%` + EI) * Heading() * identity, 
             data = .)
   
   table.file
