@@ -9,6 +9,7 @@
 Ranking <- function(data,
                     form,
                     page,
+                    digit = 1,
                     directory) {
   
   table1 <- data %>% 
@@ -18,10 +19,10 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
     group_by(period) %>% 
-    mutate(Ranking = rank(-`RMB(Mn)`)) %>% 
+    mutate(Ranking = rank(-value)) %>% 
     ungroup() %>% 
     setDT() %>% 
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking") %>% 
@@ -34,10 +35,10 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
     group_by(period) %>% 
-    mutate(Ranking = rank(-`RMB(Mn)`)) %>% 
+    mutate(Ranking = rank(-value)) %>% 
     ungroup() %>% 
     setDT() %>% 
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
@@ -49,10 +50,10 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
     group_by(period) %>% 
-    mutate(Ranking = rank(-`RMB(Mn)`)) %>% 
+    mutate(Ranking = rank(-value)) %>% 
     ungroup() %>% 
     setDT() %>% 
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
@@ -63,10 +64,10 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>% 
-    summarise(`RMB(Mn)` = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
     group_by(period) %>% 
-    mutate(`Share%` = `RMB(Mn)` / sum(`RMB(Mn)`, na.rm = TRUE)) %>% 
+    mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
     ungroup() %>% 
     filter(Product %in% unique(form$Display)) %>% 
     setDT() %>% 
@@ -81,7 +82,7 @@ Ranking <- function(data,
     dcast(Product + Manufactor + `MNC/Local` + period ~ index, value.var = "value") %>% 
     group_by(Product) %>% 
     arrange(period) %>% 
-    mutate(`Growth%` = `RMB(Mn)` / lag(`RMB(Mn)`) - 1) %>% 
+    mutate(`Growth%` = value / lag(value) - 1) %>% 
     ungroup() %>% 
     filter(period == max(period)) %>% 
     select(-period) %>% 
@@ -95,7 +96,8 @@ Ranking <- function(data,
     left_join(table2, by = c("Product", "Manufactor", "MNC/Local")) %>% 
     left_join(table3, by = c("Product", "Manufactor", "MNC/Local")) %>% 
     full_join(table4, by = c("Product", "Manufactor", "MNC/Local")) %>% 
-    mutate(` ` = factor(Product, levels = Product)) %>% 
+    mutate(` ` = factor(Product, levels = Product),
+           !!sym(paste0("Value(", unique(form$Digit), ")")) := value) %>% 
     tabular(` ` ~ 
               Heading("Ranking") * identity * 
               (sym(sort(unique(data$MAT), decreasing = TRUE)[1]) + 
@@ -105,7 +107,7 @@ Ranking <- function(data,
               Heading("Product Info") * identity * 
               (Product + Manufactor + `MNC/Local`) + 
               Heading(sort(unique(data$MAT), decreasing = TRUE)[1], character.only = TRUE) * identity * 
-              (`RMB(Mn)` + `Growth%` + `Share%`),
+              (sym(paste0("Value(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
             data = .)
   
   table.file

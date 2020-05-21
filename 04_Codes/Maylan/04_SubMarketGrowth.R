@@ -9,6 +9,7 @@
 SubMarketGrowth <- function(data,
                             form,
                             page,
+                            digit = 1,
                             directory) {
   
   table.file <- data %>% 
@@ -29,7 +30,7 @@ SubMarketGrowth <- function(data,
     setDT() %>% 
     dcast(sub_market ~ period, value.var = "growth") %>% 
     right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>% 
-    rename(!!sym(unique(form$Index)) := sub_market)
+    rename("Growth%" = sub_market)
   
   table.file
 }

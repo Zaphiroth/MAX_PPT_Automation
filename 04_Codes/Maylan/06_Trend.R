@@ -9,6 +9,7 @@
 Trend <- function(data,
                   form,
                   page,
+                  digit = 1,
                   directory) {
   
   table.file <- data %>% 
@@ -18,13 +19,13 @@ Trend <- function(data,
                             !!sym(unique(form$Summary1)), 
                             "Others")) %>% 
     group_by(period = !!sym(unique(form$Period)), summary) %>% 
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
     arrange(period) %>% 
     setDT() %>% 
     dcast(summary ~ period, value.var = "value") %>% 
     right_join(distinct(form, Display), by = c("summary" = "Display")) %>% 
-    rename(!!sym(unique(form$Index)) := summary)
+    rename(` ` = summary)
   
   table.file
 }

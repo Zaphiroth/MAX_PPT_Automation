@@ -11,7 +11,7 @@ raw.data <- read.xlsx("02_Inputs/乙肝MAX2016-2019.xlsx")
 
 form.table <- read.xlsx("03_Outputs/Form_table.xlsx")
 
-##
+
 ##---- Period ----
 latest.date <- sort(unique(raw.data$Date), decreasing = TRUE)
 
@@ -82,30 +82,51 @@ GenerateFile <- function(data,
     distinct(Type) %>% 
     unlist()
   
+  if (!is.na(unique(form$Region))) {
+    region.select <- stri_split_fixed(unique(form$Region), ":", simplify = TRUE) %>% 
+      as.character()
+    
+    data <- data %>% 
+      filter(!!sym(region.select[1]) == region.select[2])
+  }
+  
+  if (is.na(unique(form$Digit))) {
+    digit <- 1
+    
+  } else if (unique(form$Digit) == "K") {
+    digit <- 1000
+    
+  } else if (unique(form$Digit) == "Mn") {
+    digit <- 1000000
+    
+  } else {
+    digit <- 1
+  }
+  
   ##---- Calculate function ----
   if (type == "MarketSize") {
-    MarketSize(data, form, page, directory)
+    MarketSize(data, form, page, digit, directory)
     
   } else if (type == "SubMarketShare") {
-    SubMarketShare(data, form, page, directory)
+    SubMarketShare(data, form, page, digit, directory)
     
   } else if (type == "SubMarketGrowth") {
-    SubMarketGrowth(data, form, page, directory)
+    SubMarketGrowth(data, form, page, digit, directory)
     
   } else if (type == "Performance") {
-    Performance(data, form, page, directory)
+    Performance(data, form, page, digit, directory)
     
   } else if (type == "Trend") {
-    Trend(data, form, page, directory)
+    Trend(data, form, page, digit, directory)
     
   } else if (type == "ShareTrend") {
-    ShareTrend(data, form, page, directory)
+    ShareTrend(data, form, page, digit, directory)
     
   } else if (type == "Ranking") {
-    Ranking(data, form, page, directory)
+    Ranking(data, form, page, digit, directory)
     
-  } else if (type == "RegionPerformance1") {
-    RegionPerformance1(data, form, page, directory)
+  } else if (type == "RegionPerformance") {
+    RegionPerformance(data, form, page, digit, directory)
     
   }
 }

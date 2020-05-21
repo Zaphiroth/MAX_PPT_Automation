@@ -9,6 +9,7 @@
 ShareTrend <- function(data,
                        form,
                        page,
+                       digit = 1,
                        directory) {
   
   table.file <- data %>% 
