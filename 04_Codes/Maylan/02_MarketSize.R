@@ -9,7 +9,7 @@
 MarketSize <- function(data,
                        form,
                        page,
-                       digit = 1,
+                       digit,
                        directory) {
   
   table.file <- data %>% 
@@ -24,6 +24,7 @@ MarketSize <- function(data,
            `Growth%` = growth)
   
   table.file
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
 
 
