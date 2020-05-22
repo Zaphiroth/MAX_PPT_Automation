@@ -27,7 +27,7 @@ ShareTrend <- function(data,
     setDT() %>% 
     dcast(summary ~ period, value.var = "value_share") %>% 
     right_join(distinct(form, Display), by = c("summary" = "Display")) %>% 
-    rename(!!sym(unique(form$Index)) := summary)
+    rename(!!sym(' ') := summary)
   
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
