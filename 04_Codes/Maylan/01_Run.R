@@ -68,7 +68,9 @@ source("04_Codes/Maylan/05_Performance.R", encoding = "UTF-8")
 source("04_Codes/Maylan/06_Trend.R", encoding = "UTF-8")
 source("04_Codes/Maylan/07_ShareTrend.R", encoding = "UTF-8")
 source("04_Codes/Maylan/08_Ranking.R", encoding = "UTF-8")
-source("04_Codes/Maylan/09_RegionPerformance1.R", encoding = "UTF-8")
+source("04_Codes/Maylan/09_RegionPerformance.R", encoding = "UTF-8")
+source("04_Codes/Maylan/10_RegionTrend.R", encoding = "UTF-8")
+source("04_Codes/Maylan/11_CompetitorPerformance.R", encoding = "UTF-8")
 
 GenerateFile <- function(data,
                          form.table,
@@ -128,7 +130,13 @@ GenerateFile <- function(data,
   } else if (type == "RegionPerformance") {
     RegionPerformance(data, form, page, digit, directory)
     
-  }
+  } else if (type == "RegionTrend") {
+    RegionTrend(data, form, page, digit, directory)
+    
+  } else if (type == "CompetitorPerformance") {
+    CompetitorPerformance(data, form, page, digit, directory)
+    
+  } 
 }
 
 
