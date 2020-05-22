@@ -4,7 +4,7 @@
 # programmer:   Zhe Liu
 # Date:         2020-05-12
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-library(readxl)
+
 
 ##---- Readin ----
 raw.data <- data.frame(read_excel("02_Inputs/乙肝MAX2016-2019.xlsx"),check.names = FALSE))
