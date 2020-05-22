@@ -9,7 +9,7 @@
 RegionPerformance <- function(data,
                               form,
                               page,
-                              digit = 1,
+                              digit,
                               directory) {
   
   table1 <- data %>% 
@@ -150,6 +150,7 @@ RegionPerformance <- function(data,
                              Heading("ΔShare%") * table4$`ΔShare%` + Heading("EI") * table4$EI))
   
   table.file
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
 
 
