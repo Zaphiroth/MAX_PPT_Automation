@@ -9,7 +9,7 @@
 ShareTrend <- function(data,
                        form,
                        page,
-                       digit = 1,
+                       digit,
                        directory) {
   
   table.file <- data %>% 
@@ -30,6 +30,7 @@ ShareTrend <- function(data,
     rename(!!sym(unique(form$Index)) := summary)
   
   table.file
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
 
 
