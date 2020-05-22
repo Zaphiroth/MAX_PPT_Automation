@@ -8,6 +8,7 @@
 RegionTrend <- function(data,
                         form,
                         page,
+                        digit,
                         directory) {
   
   table.file <- data %>% 
@@ -15,9 +16,7 @@ RegionTrend <- function(data,
              region = !!sym(unique(form$Summary1))) %>%
     summarise(Value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>% 
-    mutate (Digit=unique(form$Digit)) %>%
-    mutate (Value= ifelse(Digit=='Mn',Value/1000000,ifelse(Digit=='K',Value/1000,Value))) %>%
-    select(-Digit) %>%
+    mutate (Value= Value/digit) %>%
     filter(period %in% tail(unique(period),36)) %>%
     mutate(month=str_sub(period,-2,-1),year=str_sub(period,1,2)) %>%
     group_by(period) %>%
@@ -39,3 +38,4 @@ RegionTrend <- function(data,
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
+
