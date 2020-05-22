@@ -9,7 +9,7 @@
 SubMarketGrowth <- function(data,
                             form,
                             page,
-                            digit = 1,
+                            digit,
                             directory) {
   
   table.file <- data %>% 
@@ -33,6 +33,7 @@ SubMarketGrowth <- function(data,
     rename("Growth%" = sub_market)
   
   table.file
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
 
 
