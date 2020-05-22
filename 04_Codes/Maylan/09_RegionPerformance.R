@@ -149,8 +149,9 @@ RegionPerformance <- function(data,
                              Heading("Growth%") * table4$`Growth%` + Heading("Share%") * table4$`Share%` + 
                              Heading("ΔShare%") * table4$`ΔShare%` + Heading("EI") * table4$EI))
   
+  table.file=as.matrix(table.file)
   table.file
-  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
+  write.xlsx(table.file,file=paste0(directory,'/',page,'.xlsx'),col.names=FALSE)
 }
 
 
