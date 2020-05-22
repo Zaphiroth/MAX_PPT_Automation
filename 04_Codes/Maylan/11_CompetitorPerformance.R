@@ -8,27 +8,21 @@
 CompetitorPerformance <- function(data,
                                form,
                                page,
+                               digit,
                                directory) {
   
-  if( is.na(unique(form$Region)) == FALSE ){
-     regparam = sub('.*:\\s*','',unique(form$Region))
-     grouper = sub('\\s*:.*','',unique(form$Region))
-     FData <- data %>% filter (!!sym(grouper)==regparam)
-    } else {FData=data}
-  
-  
-  table1 <- FData %>% 
+  table1 <- data %>% 
     group_by(period = !!sym(unique(form$Period)),
              region = !!sym(unique(form$Summary1)),
              product = !!sym(unique(form$Summary2))) %>% 
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
     ungroup() %>% 
     filter(period %in% tail(unique(period),2) & product %in% unique(form$Internal)) %>% 
-    mutate(type =  paste("Internal Product",product,sep='-'), sequence = 0) %>% 
+    mutate(type =  paste("Internal Product",product,sep=' : '), sequence = 0) %>% 
     select(type,period,region,sub_value,sequence) 
 
   
-  table2 <- FData %>% 
+  table2 <- data %>% 
     filter (!!sym(unique(form$Summary2)) != unique(form$Internal) ) %>%
     mutate(type = ifelse(!!sym(unique(form$Summary2)) %in% unique(form$Display), 
                          !!sym(unique(form$Summary2)), 
@@ -60,7 +54,7 @@ CompetitorPerformance <- function(data,
     arrange(desc(category),sequence) %>%
     select (Name, everything(),-type,-category,-sequence) %>% 
     rename(' ' = Name) 
-    
+ 
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
