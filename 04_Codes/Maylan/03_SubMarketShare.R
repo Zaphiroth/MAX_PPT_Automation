@@ -9,7 +9,7 @@
 SubMarketShare <- function(data,
                            form,
                            page,
-                           digit = 1,
+                           digit,
                            directory) {
   
   table.file <- data %>% 
@@ -34,6 +34,7 @@ SubMarketShare <- function(data,
     right_join(distinct(form, Display), by = c("sub_market" = "Display"))
   
   table.file
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
 
 
