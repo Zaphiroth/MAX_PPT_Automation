@@ -9,7 +9,7 @@
 Performance <- function(data,
                         form,
                         page,
-                        digit = 1,
+                        digit,
                         directory) {
   
   table1 <- data %>% 
@@ -164,6 +164,7 @@ Performance <- function(data,
             data = .)
   
   table.file
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
 
 
