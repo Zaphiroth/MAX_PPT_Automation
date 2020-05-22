@@ -110,8 +110,9 @@ Ranking <- function(data,
               (sym(paste0("Value(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
             data = .)
   
+  table.file=as.matrix(table.file)
   table.file
-  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
+  write.xlsx(table.file,file=paste0(directory,'/',page,'.xlsx'),col.names=FALSE)
 }
 
 
