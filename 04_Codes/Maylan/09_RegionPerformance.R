@@ -125,7 +125,7 @@ RegionPerformance <- function(data,
     bind_rows(table3) %>% 
     mutate(region = factor(region, levels = table2$region)) %>% 
     right_join(distinct(table2, region), by = "region") %>% 
-    mutate(type = paste0("Internal Product Performance ", period)) %>% 
+    mutate(type = paste0("Internal Product Performance ", first(na.omit(period)))) %>% 
     select(region,
            sub_value,
            `Con%`,

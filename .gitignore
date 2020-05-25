@@ -3,8 +3,10 @@
 
 .Rhistory
 
-02_Inputs/
-
-06_Deliveries/
+02_Inputs
 
 .Rproj.user/
+
+05_Internal_Review/
+
+*.zip
