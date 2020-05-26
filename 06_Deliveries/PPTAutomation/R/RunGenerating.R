@@ -53,21 +53,15 @@ RunGenerating <- function(inst,
   }
 
   ##---- Readin ----
-  ReadWorkbooks <- function(file) {
-    filenames <- list.files(path = file,
-                            pattern = "*.xlsx", full.names = TRUE)
+  filenames <- list.files(path = directory,
+                          pattern = "*.xlsx", full.names = TRUE)
 
-    file.list <- map(filenames, function(filename) {
-      print(filename)
-      file.data <- read_excel(filename) %>%
-        distinct()
-    })
+  file.list <- map(filenames, function(filename) {
+    print(filename)
+    file.data <- data.frame(read_excel(filename))
+  })
 
-    file.list
-  }
-
-  raw.data <- ReadWorkbooks(directory) %>%
-    bind_rows()
+  raw.data <- bind_rows(file.list)
 
   form.table <- data.frame(read_excel(form.dir))
 
