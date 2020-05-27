@@ -73,9 +73,9 @@ source("04_Codes/Maylan/10_RegionTrend.R", encoding = "UTF-8")
 source("04_Codes/Maylan/11_CompetitorPerformance.R", encoding = "UTF-8")
 source("04_Codes/Maylan/12_GrowthTrend.R", encoding = "UTF-8")
 
-GenerateFile <- function(data,
+GenerateFile <- function(page,
+                         data,
                          form.table,
-                         page,
                          directory) {
   ##---- Identify table type ----
   form <- form.table %>% 
@@ -144,7 +144,11 @@ GenerateFile <- function(data,
 }
 
 
-
+map(unique(form.table$Page),
+    GenerateFile,
+    data = data,
+    form.table = form.table,
+    directory = "05_Internal_Review/test1")
 
 
 

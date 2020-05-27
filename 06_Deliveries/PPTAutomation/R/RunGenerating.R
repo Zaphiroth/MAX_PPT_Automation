@@ -40,6 +40,10 @@ RunGenerating <- function(inst,
                           directory) {
   prerequest()
 
+  options(java.parameters = "-Xmx2048m",
+          scipen = 200,
+          stringsAsFactors = FALSE)
+
   mainDir <- system.file(inst,
                          package = "PPTAutomation")
 
@@ -53,12 +57,12 @@ RunGenerating <- function(inst,
   }
 
   ##---- Readin ----
-  filenames <- list.files(path = directory,
+  filenames <- list.files(path = data.dir,
                           pattern = "*.xlsx", full.names = TRUE)
 
   file.list <- map(filenames, function(filename) {
     print(filename)
-    file.data <- data.frame(read_excel(filename))
+    file.data <- data.frame(read_excel(filename), check.names = FALSE)
   })
 
   raw.data <- bind_rows(file.list)

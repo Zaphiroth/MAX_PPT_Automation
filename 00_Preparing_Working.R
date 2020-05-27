@@ -36,3 +36,9 @@ suppressPackageStartupMessages({
 
 ##---- setup the directories ----
 system("mkdir 01_Background 02_Inputs 03_Outputs 04_Codes 05_Internal_Review 06_Deliveries")
+
+RunGenerating("Maylan", 
+              "E:/LZ/MAX_PPT_Automation/02_Inputs", 
+              "E:/LZ/MAX_PPT_Automation/03_Outputs/Form_table.xlsx", 
+              "E:/LZ/MAX_PPT_Automation/05_Internal_Review/test1")
+
