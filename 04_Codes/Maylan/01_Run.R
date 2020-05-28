@@ -56,8 +56,7 @@ mth.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
 data <- raw.data %>% 
   left_join(mat.date, by = "Date") %>% 
   left_join(ytd.date, by = "Date") %>% 
-  left_join(mth.date, by = "Date") %>% 
-  filter(!is.na(MAT), !is.na(YTD))
+  left_join(mth.date, by = "Date")
 
 
 ##---- Generation function ----

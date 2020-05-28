@@ -117,8 +117,7 @@ RunGenerating <- function(inst,
   data <- raw.data %>%
     left_join(mat.date, by = "Date") %>%
     left_join(ytd.date, by = "Date") %>%
-    left_join(mth.date, by = "Date") %>%
-    filter(!is.na(MAT), !is.na(YTD))
+    left_join(mth.date, by = "Date")
 
   ##---- Generate files ----
   source(paste0(mainDir, "/main.R"), encoding = "UTF-8")
