@@ -67,7 +67,7 @@ RunGenerating <- function(inst,
 
   raw.data <- bind_rows(file.list)
 
-  form.table <- data.frame(read_excel(form.dir))
+  form.table <- data.frame(read_excel(form.dir), check.names = FALSE)
 
   if (is.null(raw.data$Date)) {
     stop("Data is not available for the tool.")
@@ -128,4 +128,6 @@ RunGenerating <- function(inst,
       form.table = form.table,
       func.dir = funcDir,
       directory = directory)
+
+  print("Success!")
 }

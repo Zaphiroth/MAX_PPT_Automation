@@ -7,9 +7,9 @@
 
 
 ##---- Readin ----
-raw.data <- data.frame(read_excel("02_Inputs/乙肝MAX2016-2019.xlsx"),check.names = FALSE)
+raw.data <- data.frame(read_excel("02_Inputs/Mylan_SEBIVO_delivery_201801-202003_v0527-用于报告.xlsx"),check.names = FALSE)
 
-form.table <- data.frame(read_excel("03_Outputs/Form_table.xlsx"))
+form.table <- data.frame(read_excel("03_Outputs/Form_table_Sebivo 1.0.xlsx"))
 
 
 ##---- Period ----
@@ -107,36 +107,47 @@ GenerateFile <- function(page,
   
   ##---- Calculate function ----
   if (type == "MarketSize") {
+    print(page)
     MarketSize(data, form, page, digit, directory)
     
   } else if (type == "SubMarketShare") {
+    print(page)
     SubMarketShare(data, form, page, digit, directory)
     
   } else if (type == "SubMarketGrowth") {
+    print(page)
     SubMarketGrowth(data, form, page, digit, directory)
     
   } else if (type == "Performance") {
+    print(page)
     Performance(data, form, page, digit, directory)
     
   } else if (type == "Trend") {
+    print(page)
     Trend(data, form, page, digit, directory)
     
   } else if (type == "ShareTrend") {
+    print(page)
     ShareTrend(data, form, page, digit, directory)
     
   } else if (type == "Ranking") {
+    print(page)
     Ranking(data, form, page, digit, directory)
     
   } else if (type == "RegionPerformance") {
+    print(page)
     RegionPerformance(data, form, page, digit, directory)
     
   } else if (type == "RegionTrend") {
+    print(page)
     RegionTrend(data, form, page, digit, directory)
     
   } else if (type == "CompetitorPerformance") {
+    print(page)
     CompetitorPerformance(data, form, page, digit, directory)
     
   } else if (type == "GrowthTrend") {
+    print(page)
     GrowthTrend(data, form, page, digit, directory)
     
   } 

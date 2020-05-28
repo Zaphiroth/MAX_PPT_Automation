@@ -33,7 +33,7 @@ Performance <- function(data,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`) * 100) %>%
     ungroup() %>%
-    filter(period == max(period)) %>%
+    filter(period == max(period, na.rm = TRUE)) %>%
     mutate(period_name = "MAT")
 
   table2 <- data %>%
@@ -57,11 +57,11 @@ Performance <- function(data,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`) * 100) %>%
     ungroup() %>%
-    filter(period == max(period)) %>%
+    filter(period == max(period, na.rm = TRUE)) %>%
     mutate(period_name = "YTD")
 
   table3 <- data %>%
-    filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH), 4, 5)) %>%
+    filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
     mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
@@ -82,7 +82,7 @@ Performance <- function(data,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`) * 100) %>%
     ungroup() %>%
-    filter(period == max(period)) %>%
+    filter(period == max(period, na.rm = TRUE)) %>%
     mutate(period_name = "MTH")
 
   if (!is.na(unique(form$Summary2))) {
@@ -102,7 +102,7 @@ Performance <- function(data,
              `ΔShare%` = `Share%` - lag(`Share%`),
              EI = `Share%` / lag(`Share%`) * 100) %>%
       ungroup() %>%
-      filter(period == max(period)) %>%
+      filter(period == max(period, na.rm = TRUE)) %>%
       mutate(period_name = "MAT")
 
     table5 <- data %>%
@@ -121,11 +121,11 @@ Performance <- function(data,
              `ΔShare%` = `Share%` - lag(`Share%`),
              EI = `Share%` / lag(`Share%`) * 100) %>%
       ungroup() %>%
-      filter(period == max(period)) %>%
+      filter(period == max(period, na.rm = TRUE)) %>%
       mutate(period_name = "YTD")
 
     table6 <- data %>%
-      filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH), 4, 5)) %>%
+      filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
       mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
                                      NA_character_))) %>%
@@ -141,7 +141,7 @@ Performance <- function(data,
              `ΔShare%` = `Share%` - lag(`Share%`),
              EI = `Share%` / lag(`Share%`) * 100) %>%
       ungroup() %>%
-      filter(period == max(period)) %>%
+      filter(period == max(period, na.rm = TRUE)) %>%
       mutate(period_name = "MTH")
 
   } else {

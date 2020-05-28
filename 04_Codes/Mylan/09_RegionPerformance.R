@@ -36,7 +36,7 @@ RegionPerformance <- function(data,
     arrange(period) %>% 
     mutate(`Growth%` = complete_value / lag(complete_value) - 1) %>% 
     ungroup() %>% 
-    filter(period == max(period))
+    filter(period == max(period, na.rm = TRUE))
   
   table2 <- data %>% 
     group_by(period = !!sym(unique(form$Period)),
@@ -56,7 +56,7 @@ RegionPerformance <- function(data,
     arrange(period) %>% 
     mutate(`Growth%` = complete_value / lag(complete_value) - 1) %>% 
     ungroup() %>% 
-    filter(period == max(period),
+    filter(period == max(period, na.rm = TRUE),
            region %in% form$Display) %>% 
     arrange(-complete_value) %>% 
     bind_rows(table1) %>% 
@@ -97,7 +97,7 @@ RegionPerformance <- function(data,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`) * 100) %>% 
     ungroup() %>% 
-    filter(period == max(period))
+    filter(period == max(period, na.rm = TRUE))
   
   table4 <- data %>% 
     group_by(period = !!sym(unique(form$Period)),
@@ -120,7 +120,7 @@ RegionPerformance <- function(data,
            `ΔShare%` = `Share%` - lag(`Share%`),
            EI = `Share%` / lag(`Share%`) * 100) %>% 
     ungroup() %>% 
-    filter(period == max(period),
+    filter(period == max(period, na.rm = TRUE),
            region %in% form$Display) %>% 
     bind_rows(table3) %>% 
     mutate(region = factor(region, levels = table2$region)) %>% 

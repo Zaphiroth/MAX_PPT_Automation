@@ -84,7 +84,7 @@ Ranking <- function(data,
     arrange(period) %>%
     mutate(`Growth%` = value / lag(value) - 1) %>%
     ungroup() %>%
-    filter(period == max(period)) %>%
+    filter(period == max(period, na.rm = TRUE)) %>%
     select(-period) %>%
     mutate(index_type = sort(unique(data$MAT), decreasing = TRUE)[1])
 
