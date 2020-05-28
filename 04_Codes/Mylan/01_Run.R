@@ -1,6 +1,6 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # ProjectName:  MAX PPT Automation
-# Purpose:      Maylan PPT Run
+# Purpose:      Mylan PPT Run
 # programmer:   Zhe Liu
 # Date:         2020-05-12
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -60,17 +60,17 @@ data <- raw.data %>%
 
 
 ##---- Generation function ----
-source("04_Codes/Maylan/02_MarketSize.R", encoding = "UTF-8")
-source("04_Codes/Maylan/03_SubMarketShare.R", encoding = "UTF-8")
-source("04_Codes/Maylan/04_SubMarketGrowth.R", encoding = "UTF-8")
-source("04_Codes/Maylan/05_Performance.R", encoding = "UTF-8")
-source("04_Codes/Maylan/06_Trend.R", encoding = "UTF-8")
-source("04_Codes/Maylan/07_ShareTrend.R", encoding = "UTF-8")
-source("04_Codes/Maylan/08_Ranking.R", encoding = "UTF-8")
-source("04_Codes/Maylan/09_RegionPerformance.R", encoding = "UTF-8")
-source("04_Codes/Maylan/10_RegionTrend.R", encoding = "UTF-8")
-source("04_Codes/Maylan/11_CompetitorPerformance.R", encoding = "UTF-8")
-source("04_Codes/Maylan/12_GrowthTrend.R", encoding = "UTF-8")
+source("04_Codes/Mylan/02_MarketSize.R", encoding = "UTF-8")
+source("04_Codes/Mylan/03_SubMarketShare.R", encoding = "UTF-8")
+source("04_Codes/Mylan/04_SubMarketGrowth.R", encoding = "UTF-8")
+source("04_Codes/Mylan/05_Performance.R", encoding = "UTF-8")
+source("04_Codes/Mylan/06_Trend.R", encoding = "UTF-8")
+source("04_Codes/Mylan/07_ShareTrend.R", encoding = "UTF-8")
+source("04_Codes/Mylan/08_Ranking.R", encoding = "UTF-8")
+source("04_Codes/Mylan/09_RegionPerformance.R", encoding = "UTF-8")
+source("04_Codes/Mylan/10_RegionTrend.R", encoding = "UTF-8")
+source("04_Codes/Mylan/11_CompetitorPerformance.R", encoding = "UTF-8")
+source("04_Codes/Mylan/12_GrowthTrend.R", encoding = "UTF-8")
 
 GenerateFile <- function(page,
                          data,
