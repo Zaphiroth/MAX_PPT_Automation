@@ -84,6 +84,9 @@ GenerateFile <- function(page,
     distinct(Type) %>% 
     unlist()
   
+  pd <- form %>% 
+    distinct(Period) %>% as.character()
+  
   if (!is.na(unique(form$Region))) {
     region.select <- stri_split_fixed(unique(form$Region), ":", simplify = TRUE) %>% 
       as.character()
@@ -104,6 +107,16 @@ GenerateFile <- function(page,
   } else {
     digit <- 1
   }
+  
+  
+if (pd=='MAT'){
+    CountMth <- data %>% group_by(MAT) %>%
+      summarise(NumbMonth = n_distinct(MTH)) %>%
+      filter(NumbMonth==12)
+    AvailMAT <- CountMth$MAT
+    data <- data %>% filter(MAT %in% AvailMAT)
+} 
+  
   
   ##---- Calculate function ----
   if (type == "MarketSize") {
