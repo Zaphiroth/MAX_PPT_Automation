@@ -6,10 +6,10 @@
 ## Test Code --- Competitor Performance : 27/28/34/35/40/41/42/43
 
 CompetitorPerformance <- function(data,
-                               form,
-                               page,
-                               digit,
-                               directory) {
+                                  form,
+                                  page,
+                                  digit,
+                                  directory) {
   
   table1 <- data %>% 
     group_by(period = !!sym(unique(form$Period)),
@@ -20,7 +20,7 @@ CompetitorPerformance <- function(data,
     filter(period %in% tail(unique(period),2) & product %in% unique(form$Internal)) %>% 
     mutate(type = product, sequence = 0) %>% 
     select(type,period,region,sub_value,sequence) 
-
+  
   
   table2 <- data %>% 
     filter (!!sym(unique(form$Summary2)) != unique(form$Internal) ) %>%
@@ -34,7 +34,7 @@ CompetitorPerformance <- function(data,
     ungroup() %>% 
     filter(period %in% tail(unique(period),2)) %>%
     mutate (sequence=ifelse(type=='Others',2,1),
-      type = factor(type, levels = c(unique(form$Display),'Others')))%>%
+            type = factor(type, levels = c(unique(form$Display),'Others')))%>%
     select(type,period,region,sub_value,sequence)  
   
   
@@ -59,8 +59,8 @@ CompetitorPerformance <- function(data,
   colnm <- colnames(table.file[,-1])
   table.file <- table.file[,c('region',grep("^Share(?!.*Others)",colnm,value = TRUE, perl = TRUE),
                               grep("^Share.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE),
-                           grep("^EI(?!.*Others)",colnm,value = TRUE, perl = TRUE),
-                           grep("^EI.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE))] 
+                              grep("^EI(?!.*Others)",colnm,value = TRUE, perl = TRUE),
+                              grep("^EI.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE))] 
   table.file <- table.file %>% rename(" " = region)
   
   table.file

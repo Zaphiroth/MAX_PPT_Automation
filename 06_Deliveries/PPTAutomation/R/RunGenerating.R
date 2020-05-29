@@ -91,6 +91,10 @@ RunGenerating <- function(inst,
                stri_paste(stri_sub(latest.date[49], 3, 4), "M", stri_sub(latest.date[49], 5, 6), " MAT"),
              TRUE ~ NA_character_
            )) %>%
+    inner_join(raw.data, by = "Date") %>%
+    distinct(Date, MAT) %>%
+    add_count(MAT, name = "n") %>%
+    filter(n == 12) %>%
     select(Date, MAT)
 
   ytd.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
@@ -115,6 +119,7 @@ RunGenerating <- function(inst,
     select(Date, MTH)
 
   data <- raw.data %>%
+    distinct() %>%
     left_join(mat.date, by = "Date") %>%
     left_join(ytd.date, by = "Date") %>%
     left_join(mth.date, by = "Date")

@@ -6,10 +6,10 @@
 ## Test Code --- Competitor Performance : 27/28/34/35/40/41/42/43
 
 CompetitorPerformance <- function(data,
-                               form,
-                               page,
-                               digit,
-                               directory) {
+                                  form,
+                                  page,
+                                  digit,
+                                  directory) {
 
   table1 <- data %>%
     group_by(period = !!sym(unique(form$Period)),
@@ -18,7 +18,7 @@ CompetitorPerformance <- function(data,
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>%
     filter(period %in% tail(unique(period),2) & product %in% unique(form$Internal)) %>%
-    mutate(type =  paste("Internal Product",product,sep=' : '), sequence = 0) %>%
+    mutate(type = product, sequence = 0) %>%
     select(type,period,region,sub_value,sequence)
 
 
@@ -34,7 +34,7 @@ CompetitorPerformance <- function(data,
     ungroup() %>%
     filter(period %in% tail(unique(period),2)) %>%
     mutate (sequence=ifelse(type=='Others',2,1),
-      type = paste("Competitor",factor(type, levels = c(unique(form$Display),'Others')),sep=' : '))%>%
+            type = factor(type, levels = c(unique(form$Display),'Others')))%>%
     select(type,period,region,sub_value,sequence)
 
 
@@ -53,11 +53,20 @@ CompetitorPerformance <- function(data,
     mutate (Name = paste(category,"_",type)) %>%
     arrange(desc(category),sequence) %>%
     select (Name, everything(),-type,-category,-sequence) %>%
-    rename(' ' = Name)
+    gather (region, value,-Name) %>%
+    spread(Name,value)
+
+  colnm <- colnames(table.file[,-1])
+  table.file <- table.file[,c('region',grep("^Share(?!.*Others)",colnm,value = TRUE, perl = TRUE),
+                              grep("^Share.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE),
+                              grep("^EI(?!.*Others)",colnm,value = TRUE, perl = TRUE),
+                              grep("^EI.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE))]
+  table.file <- table.file %>% rename(" " = region)
 
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
+
 
 
 

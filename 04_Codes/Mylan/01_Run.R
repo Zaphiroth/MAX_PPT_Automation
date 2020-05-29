@@ -7,9 +7,11 @@
 
 
 ##---- Readin ----
-raw.data <- data.frame(read_excel("02_Inputs/Mylan_SEBIVO_delivery_201801-202003_v0527-用于报告.xlsx"),check.names = FALSE)
+raw.data <- data.frame(read_excel("02_Inputs/Mylan_SEBIVO_delivery_201801-202003_v0527-用于报告.xlsx"), 
+                       check.names = FALSE)
 
-form.table <- data.frame(read_excel("03_Outputs/Form_table_Sebivo 1.0.xlsx"))
+form.table <- data.frame(read_excel("03_Outputs/Form_table.xlsx"), 
+                         check.names = FALSE)
 
 
 ##---- Period ----
@@ -30,6 +32,10 @@ mat.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
              stri_paste(stri_sub(latest.date[49], 3, 4), "M", stri_sub(latest.date[49], 5, 6), " MAT"),
            TRUE ~ NA_character_
          )) %>% 
+  inner_join(raw.data, by = "Date") %>% 
+  distinct(Date, MAT) %>% 
+  add_count(MAT, name = "n") %>% 
+  filter(n == 12) %>% 
   select(Date, MAT)
 
 ytd.date <- data.frame(Date = sort(unique(raw.data$Date))) %>% 
@@ -54,6 +60,7 @@ mth.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
   select(Date, MTH)
 
 data <- raw.data %>% 
+  distinct() %>% 
   left_join(mat.date, by = "Date") %>% 
   left_join(ytd.date, by = "Date") %>% 
   left_join(mth.date, by = "Date")
@@ -84,15 +91,17 @@ GenerateFile <- function(page,
     distinct(Type) %>% 
     unlist()
   
-  pd <- form %>% 
-    distinct(Period) %>% as.character()
-  
-  if (!is.na(unique(form$Region))) {
-    region.select <- stri_split_fixed(unique(form$Region), ":", simplify = TRUE) %>% 
+  if (!is.na(unique(form$Restriction))) {
+    restriction <- stri_split_fixed(unique(form$Restriction), ",", simplify = TRUE) %>% 
       as.character()
     
-    data <- data %>% 
-      filter(!!sym(region.select[1]) == region.select[2])
+    for (i in restriction) {
+      rst <- stri_split_fixed(i, ":", simplify = TRUE) %>% 
+        as.character()
+      
+      data <- data %>% 
+        filter(!!sym(rst[1]) == rst[2])
+    }
   }
   
   if (is.na(unique(form$Digit))) {
@@ -107,16 +116,6 @@ GenerateFile <- function(page,
   } else {
     digit <- 1
   }
-  
-  
-if (pd=='MAT'){
-    CountMth <- data %>% group_by(MAT) %>%
-      summarise(NumbMonth = n_distinct(MTH)) %>%
-      filter(NumbMonth==12)
-    AvailMAT <- CountMth$MAT
-    data <- data %>% filter(MAT %in% AvailMAT)
-} 
-  
   
   ##---- Calculate function ----
   if (type == "MarketSize") {

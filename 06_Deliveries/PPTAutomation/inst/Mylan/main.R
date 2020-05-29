@@ -20,12 +20,17 @@ GenerateFile <- function(page,
     distinct(Type) %>%
     unlist()
 
-  if (!is.na(unique(form$Region))) {
-    region.select <- stri_split_fixed(unique(form$Region), ":", simplify = TRUE) %>%
+  if (!is.na(unique(form$Restriction))) {
+    restriction <- stri_split_fixed(unique(form$Restriction), ",", simplify = TRUE) %>%
       as.character()
 
-    data <- data %>%
-      filter(!!sym(region.select[1]) == region.select[2])
+    for (i in restriction) {
+      rst <- stri_split_fixed(i, ":", simplify = TRUE) %>%
+        as.character()
+
+      data <- data %>%
+        filter(!!sym(rst[1]) == rst[2])
+    }
   }
 
   if (is.na(unique(form$Digit))) {
