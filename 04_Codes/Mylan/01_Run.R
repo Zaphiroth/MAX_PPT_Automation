@@ -7,10 +7,10 @@
 
 
 ##---- Readin ----
-raw.data <- data.frame(read_excel("02_Inputs/Mylan_SEBIVO_delivery_201801-202003_v0527-用于报告.xlsx"), 
+raw.data <- data.frame(read_excel("02_Inputs/Trend_Mylan_ELID_delivery_201801-202003_v0527.xlsx"), 
                        check.names = FALSE)
 
-form.table <- data.frame(read_excel("03_Outputs/Form_table.xlsx"), 
+form.table <- data.frame(read_excel("03_Outputs/Form_ELID trend.xlsx"), 
                          check.names = FALSE)
 
 

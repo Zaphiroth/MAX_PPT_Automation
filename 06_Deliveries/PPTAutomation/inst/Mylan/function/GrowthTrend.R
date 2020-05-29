@@ -36,7 +36,8 @@ GrowthTrend <- function(data,
                              2, ifelse(summary=='Total',3,1))) %>%
     arrange(sequence,summary) %>%
     select(-sequence) %>%
-    rename(' ' = summary)
+    rename(' ' = summary) %>%
+    right_join(distinct(form, Display), by = c(" " = "Display"))
 
   ref.table <- data.frame(period=colnames(table.file[-1])) %>%
     mutate(month=str_sub(period,-2,-1),year=str_sub(period,1,2))
