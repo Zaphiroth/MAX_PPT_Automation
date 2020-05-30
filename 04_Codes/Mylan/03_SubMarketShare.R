@@ -59,7 +59,7 @@ countpd <- length(pdnm)
     if (length(grep("^(?=\\bNA\\b).*",cdnm,value = TRUE, perl = TRUE)) != 0) {
      table.file <- table.file[,-ncol(table.file)]
     }
-  }
+   }
   
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
