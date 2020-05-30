@@ -54,6 +54,11 @@ countpd <- length(pdnm)
     adddf <- data.frame(matrix(nrow=nrow(table.file),ncol=ncolnm)) 
     colnames(adddf) <- unique(newdf$pd)
     table.file <- cbind(table.file[1],adddf,table.file[-1])
+    
+    cdnm <- colnames(table.file[-1])
+    if (length(grep("^(?=\\bNA\\b).*",cdnm,value = TRUE, perl = TRUE)) != 0) {
+     table.file <- table.file[,-ncol(table.file)]
+    }
   }
   
   table.file
