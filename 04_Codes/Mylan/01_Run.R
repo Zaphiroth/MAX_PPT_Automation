@@ -41,15 +41,15 @@ mat.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
 ytd.date <- data.frame(Date = sort(unique(raw.data$Date))) %>% 
   mutate(ymd = ymd(stri_paste(Date, "01")),
          YTD = case_when(
-           ymd <= max(ymd) & stri_sub(Date, 1, 4) == stri_sub(latest.date[1], 1, 4) ~ 
+           ymd <= max(ymd) & ymd>max(ymd)-months(x = 12) ~ 
              stri_paste(stri_sub(latest.date[1], 3, 4), "M", stri_sub(latest.date[1], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 12) & stri_sub(Date, 1, 4) == stri_sub(latest.date[13], 1, 4) ~
+           ymd <= max(ymd)-months(x = 12) & ymd>max(ymd)-months(x = 24) ~
              stri_paste(stri_sub(latest.date[13], 3, 4), "M", stri_sub(latest.date[13], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 24) & stri_sub(Date, 1, 4) == stri_sub(latest.date[25], 1, 4) ~
+           ymd <= max(ymd)-months(x = 24) & ymd>max(ymd)-months(x = 36) ~
              stri_paste(stri_sub(latest.date[25], 3, 4), "M", stri_sub(latest.date[25], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 36) & stri_sub(Date, 1, 4) == stri_sub(latest.date[37], 1, 4) ~
+           ymd <= max(ymd)-months(x = 36) & ymd>max(ymd)-months(x = 48) ~
              stri_paste(stri_sub(latest.date[37], 3, 4), "M", stri_sub(latest.date[37], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 48) & stri_sub(Date, 1, 4) == stri_sub(latest.date[49], 1, 4) ~
+           ymd <= max(ymd)-months(x = 48) & ymd>max(ymd)-months(x = 60) ~
              stri_paste(stri_sub(latest.date[49], 3, 4), "M", stri_sub(latest.date[49], 5, 6), " YTD"),
            TRUE ~ NA_character_
          )) %>% 
