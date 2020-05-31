@@ -31,6 +31,7 @@ suppressPackageStartupMessages({
   require(RecordLinkage)
   require(digest)
   require(tables)
+  require(zoo)
 })
 
 
