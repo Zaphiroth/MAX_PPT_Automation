@@ -78,6 +78,7 @@ source("04_Codes/Mylan/09_RegionPerformance.R", encoding = "UTF-8")
 source("04_Codes/Mylan/10_RegionTrend.R", encoding = "UTF-8")
 source("04_Codes/Mylan/11_CompetitorPerformance.R", encoding = "UTF-8")
 source("04_Codes/Mylan/12_GrowthTrend.R", encoding = "UTF-8")
+source("04_Codes/Mylan/13_GrowthTrendMAT.R", encoding = "UTF-8")
 
 GenerateFile <- function(page,
                          data,
@@ -161,6 +162,10 @@ GenerateFile <- function(page,
   } else if (type == "GrowthTrend") {
     print(page)
     GrowthTrend(data, form, page, digit, directory)
+    
+  } else if (type == "GrowthTrendMAT") {
+    print(page)
+    GrowthTrendMAT(data, form, page, digit, directory)
     
   } 
 }
