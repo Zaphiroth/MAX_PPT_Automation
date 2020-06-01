@@ -17,6 +17,7 @@ CompetitorPerformance <- function(data,
              product = !!sym(unique(form$Summary2))) %>%
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     filter(period %in% tail(unique(period),2) & product %in% unique(form$Internal)) %>%
     mutate(type = product, sequence = 0) %>%
     select(type,period,region,sub_value,sequence)
@@ -32,6 +33,7 @@ CompetitorPerformance <- function(data,
              type ) %>%
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     filter(period %in% tail(unique(period),2)) %>%
     mutate (sequence=ifelse(type=='Others',2,1),
             type = factor(type, levels = c(unique(form$Display),'Others')))%>%

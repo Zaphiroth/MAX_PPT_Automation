@@ -23,7 +23,8 @@ prerequest <- function() {
                  "lubridate",
                  "janitor",
                  "digest",
-                 "tables")
+                 "tables",
+                 "zoo")
 }
 
 
