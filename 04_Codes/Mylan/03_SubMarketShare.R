@@ -33,12 +33,12 @@ SubMarketShare <- function(data,
            ends_with("Share")) %>% 
     right_join(distinct(form, Display), by = c("sub_market" = "Display"))
   
-pdnm <- colnames(table.file[-1])
-if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
-pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)]
-}
-
-countpd <- length(pdnm)
+  pdnm <- colnames(table.file[-1])
+  if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
+    pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)]
+  }
+  
+  countpd <- length(pdnm)
   if (countpd<5) {
     timer <- 5 - countpd
     nleng <- nchar(pdnm[1])
@@ -57,9 +57,9 @@ countpd <- length(pdnm)
     
     cdnm <- colnames(table.file[-1])
     if (length(grep("^(?=\\bNA\\b).*",cdnm,value = TRUE, perl = TRUE)) != 0) {
-     table.file <- table.file[,-ncol(table.file)]
+      table.file <- table.file[,-ncol(table.file)]
     }
-   }
+  }
   
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))

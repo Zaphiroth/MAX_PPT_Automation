@@ -1,7 +1,7 @@
 Package: PPTAutomation
 Type: Package
 Title: Auto-generating PPT table files using MAX data
-Version: 0.4.5
+Version: 0.5.0
 Author: Pharbers
 Maintainer: Zhe Liu <zliu@pharbers.com>
 Description: Input mapped MAX data and form table, 
@@ -26,7 +26,8 @@ Imports:
     lubridate,
     janitor,
     digest,
-    tables
+    tables,
+    zoo
 Suggests:
     pacman
 RoxygenNote: 7.0.2
