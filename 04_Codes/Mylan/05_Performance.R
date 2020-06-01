@@ -19,6 +19,7 @@ Performance <- function(data,
     group_by(period = MAT, summary) %>% 
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
+    filter(!is.na(period)) %>% 
     setDT() %>% 
     dcast(summary ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "TTL Mkt") %>% 
@@ -43,6 +44,7 @@ Performance <- function(data,
     group_by(period = YTD, summary) %>% 
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
+    filter(!is.na(period)) %>% 
     setDT() %>% 
     dcast(summary ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "TTL Mkt") %>% 
@@ -68,6 +70,7 @@ Performance <- function(data,
     group_by(period = MTH, summary) %>% 
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
+    filter(!is.na(period)) %>% 
     setDT() %>% 
     dcast(summary ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "TTL Mkt") %>% 
@@ -93,6 +96,7 @@ Performance <- function(data,
       group_by(period = MAT, summary) %>% 
       summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
       ungroup() %>% 
+      filter(!is.na(period)) %>% 
       group_by(period) %>% 
       mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
       ungroup() %>% 
@@ -112,6 +116,7 @@ Performance <- function(data,
       group_by(period = YTD, summary) %>% 
       summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
       ungroup() %>% 
+      filter(!is.na(period)) %>% 
       group_by(period) %>% 
       mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
       ungroup() %>% 
@@ -132,6 +137,7 @@ Performance <- function(data,
       group_by(period = MTH, summary) %>% 
       summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
       ungroup() %>% 
+      filter(!is.na(period)) %>% 
       group_by(period) %>% 
       mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>% 
       ungroup() %>% 
