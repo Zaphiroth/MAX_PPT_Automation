@@ -42,7 +42,7 @@ CompetitorPerformance <- function(data,
   
   table.file <- table1 %>% rbind(table2) %>% 
     group_by(period,region) %>%
-    mutate(total = sum(sub_value)) %>%
+    mutate(total = sum(sub_value, na.rm = TRUE)) %>%
     ungroup() %>% 
     mutate(Share = sub_value/total) %>%
     arrange(type,region) %>%

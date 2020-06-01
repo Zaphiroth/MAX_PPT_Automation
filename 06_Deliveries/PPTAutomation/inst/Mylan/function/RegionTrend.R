@@ -20,9 +20,9 @@ RegionTrend <- function(data,
     filter(period %in% tail(unique(period),36)) %>%
     mutate(month=str_sub(period,-2,-1),year=str_sub(period,1,2)) %>%
     group_by(period) %>%
-    mutate (total=sum(Value)) %>%
+    mutate (total=sum(Value, na.rm = TRUE)) %>%
     ungroup() %>%
-    mutate(Share = (Value/total)*100) %>%
+    mutate(Share = Value/total) %>%
     arrange(month,region) %>%
     group_by (month,region) %>%
     mutate (EI=(Share / lag(Share))*100) %>%
