@@ -44,7 +44,7 @@ CompetitorPerformance <- function(data,
     group_by(period,region) %>%
     mutate(total = sum(sub_value)) %>%
     ungroup() %>% 
-    mutate(Share = (sub_value/total)*100) %>%
+    mutate(Share = sub_value/total) %>%
     arrange(type,region) %>%
     group_by(type,region) %>%
     mutate (EI=(Share / lag(Share))*100) %>% na.omit() %>%
