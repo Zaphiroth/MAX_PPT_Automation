@@ -44,7 +44,7 @@ Ranking <- function(data,
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
   
   table3 <- data %>% 
-    filter(MTH %in% head(sort(unique(data$MTH), decreasing = TRUE), 2),
+    filter(MTH %in% sort(unique(data$MTH), decreasing = TRUE)[c(1, 13)],
            !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>% 
     group_by(period = MTH,
              Product = !!sym(unique(form$Summary1)),
@@ -103,7 +103,9 @@ Ranking <- function(data,
               (sym(sort(unique(data$MAT), decreasing = TRUE)[1]) + 
                  sym(sort(unique(data$MAT), decreasing = TRUE)[2]) + 
                  sym(sort(unique(data$YTD), decreasing = TRUE)[1]) + 
-                 sym(sort(unique(data$YTD), decreasing = TRUE)[2])) + 
+                 sym(sort(unique(data$YTD), decreasing = TRUE)[2]) + 
+                 sym(sort(unique(data$MTH), decreasing = TRUE)[1]) + 
+                 sym(sort(unique(data$MTH), decreasing = TRUE)[13])) + 
               Heading("Product Info") * identity * 
               (Product + Manufactor + `MNC/Local`) + 
               Heading(sort(unique(data$MAT), decreasing = TRUE)[1], character.only = TRUE) * identity * 

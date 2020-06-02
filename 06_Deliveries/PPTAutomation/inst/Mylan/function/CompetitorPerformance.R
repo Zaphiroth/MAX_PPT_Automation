@@ -35,35 +35,35 @@ CompetitorPerformance <- function(data,
     ungroup() %>%
     filter(!is.na(period)) %>%
     filter(period %in% tail(unique(period),2)) %>%
-    mutate (sequence=ifelse(type=='Others',2,1),
-            type = factor(type, levels = c(unique(form$Display),'Others')))%>%
+    mutate(sequence=ifelse(type=='Others',2,1))%>%
     select(type,period,region,sub_value,sequence)
 
 
-  table.file <- table1 %>% rbind(table2) %>%
+  table.file <- bind_rows(table1, table2) %>%
     group_by(period,region) %>%
     mutate(total = sum(sub_value, na.rm = TRUE)) %>%
     ungroup() %>%
     mutate(Share = sub_value/total) %>%
     arrange(type,region) %>%
     group_by(type,region) %>%
-    mutate (EI=(Share / lag(Share))*100) %>% na.omit() %>%
+    mutate (EI=(Share / lag(Share))*100) %>%
     ungroup() %>%
-    select(type,region,Share,EI,sequence) %>%
-    gather (category,value,Share:EI) %>%
-    spread(region,value) %>%
-    mutate (Name = paste(category,"_",type)) %>%
-    arrange(desc(category),sequence) %>%
-    select (Name, everything(),-type,-category,-sequence) %>%
-    gather (region, value,-Name) %>%
-    spread(Name,value)
-
-  colnm <- colnames(table.file[,-1])
-  table.file <- table.file[,c('region',grep("^Share(?!.*Others)",colnm,value = TRUE, perl = TRUE),
-                              grep("^Share.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE),
-                              grep("^EI(?!.*Others)",colnm,value = TRUE, perl = TRUE),
-                              grep("^EI.*(?=.*\\bOthers\\b)",colnm,value=TRUE,perl=TRUE))]
-  table.file <- table.file %>% rename(" " = region)
+    filter(period == max(period, na.rm = TRUE)) %>%
+    setDT() %>%
+    melt(id.vars = c("type", "period", "region", "sequence"),
+         measure.vars = c("Share", "EI"),
+         variable.factor = FALSE) %>%
+    unite("type", variable, type, sep = " _ ") %>%
+    mutate(type = factor(type, levels = c(paste0("Share _ ", c(unique(form$Internal),
+                                                               unique(form$Display),
+                                                               "Others")),
+                                          paste0("EI _ ", c(unique(form$Internal),
+                                                            unique(form$Display),
+                                                            "Others"))))) %>%
+    setDT() %>%
+    dcast(region ~ type, value.var = "value") %>%
+    arrange(region) %>%
+    rename(` ` = region)
 
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))

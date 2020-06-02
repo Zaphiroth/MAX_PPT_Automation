@@ -7,10 +7,10 @@
 
 
 ##---- Readin ----
-raw.data <- data.frame(read_excel("02_Inputs/乙肝MAX2016-2019.xlsx"), 
+raw.data <- data.frame(read_excel("02_Inputs/Trend_Mylan_SEBIVO_delivery_201801-202003_v0529.xlsx"), 
                        check.names = FALSE)
 
-form.table <- data.frame(read_excel("03_Outputs/Form_table.xlsx"), 
+form.table <- data.frame(read_excel("03_Outputs/Form_table_Sebivo1.0.xlsx"), 
                          check.names = FALSE)
 
 

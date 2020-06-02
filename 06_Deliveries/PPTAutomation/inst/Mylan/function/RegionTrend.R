@@ -28,8 +28,8 @@ RegionTrend <- function(data,
     mutate (EI=(Share / lag(Share))*100) %>%
     ungroup() %>%
     na.omit() %>%
-    select(region,period,Value,EI) %>%
-    gather(category,value,Value:EI) %>%
+    select(region,period,Share,EI) %>%
+    gather(category,value,Share:EI) %>%
     mutate(Name= paste(region,category,sep="_")) %>%
     spread(period,value) %>%
     arrange(desc(category),desc(Name)) %>%
