@@ -76,14 +76,14 @@ RegionPerformance <- function(data,
              product = !!sym(unique(form$Summary3))) %>% 
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
     ungroup() %>% 
-    group_by(period) %>% 
-    mutate(national_value = sum(sub_value, na.rm = TRUE)) %>% 
-    ungroup() %>% 
     group_by(period, region) %>% 
     mutate(complete_value = sum(sub_value, na.rm = TRUE)) %>% 
     ungroup() %>% 
-    filter(product %in% unique(form$Internal),
-           region %in% form$Display) %>% 
+    filter(product %in% unique(form$Internal)) %>% 
+    group_by(period) %>% 
+    mutate(national_value = sum(sub_value, na.rm = TRUE)) %>% 
+    ungroup() %>% 
+    filter(region %in% form$Display) %>% 
     group_by(region = "Total", period) %>% 
     summarise(sub_value = sum(sub_value, na.rm = TRUE),
               complete_value = sum(complete_value, na.rm = TRUE),
