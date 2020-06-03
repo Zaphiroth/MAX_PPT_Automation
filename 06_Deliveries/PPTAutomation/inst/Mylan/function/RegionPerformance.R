@@ -18,20 +18,20 @@ RegionPerformance <- function(data,
              mnf_type = !!sym(unique(form$Summary2))) %>%
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
     ungroup() %>%
+    setDT() %>%
+    dcast(period + region ~ mnf_type, value.var = "sub_value", fill = 0) %>%
+    mutate(complete_value = MNC + LOCAL) %>%
     group_by(period) %>%
-    mutate(national_value = sum(sub_value, na.rm = TRUE)) %>%
+    mutate(national_value = sum(complete_value, na.rm = TRUE)) %>%
     ungroup() %>%
-    group_by(period, region) %>%
-    mutate(complete_value = sum(sub_value, na.rm = TRUE)) %>%
-    ungroup() %>%
-    filter(mnf_type == "MNC",
-           region %in% form$Display) %>%
+    filter(region %in% unique(form$Display)) %>%
     group_by(region = "Total", period) %>%
-    summarise(sub_value = sum(sub_value, na.rm = TRUE),
+    summarise(MNC = sum(MNC, na.rm = TRUE),
               complete_value = sum(complete_value, na.rm = TRUE),
               national_value = first(national_value)) %>%
     ungroup() %>%
-    mutate(`Con%` = complete_value / national_value) %>%
+    mutate(`MNC%` = MNC / complete_value,
+           `Con%` = complete_value / national_value) %>%
     group_by(region) %>%
     arrange(period) %>%
     mutate(`Growth%` = complete_value / lag(complete_value) - 1) %>%
@@ -137,13 +137,13 @@ RegionPerformance <- function(data,
 
   table.file <- tabular(Heading(unique(form$Summary1), character.only = TRUE) * table2$region ~
                           Heading(unique(table2$type), character.only = TRUE) * identity *
-                          (Heading(paste0("Value(", unique(form$Digit), ")"), character.only = TRUE) *
+                          (Heading(paste0("Market(", unique(form$Digit), ")"), character.only = TRUE) *
                              table2$complete_value +
                              Heading("Con%") * table2$`Con%` +
                              Heading("Growth%") * table2$`Growth%` +
                              Heading("MNC%") * table2$`MNC%`) +
                           Heading(unique(table4$type), character.only = TRUE) * identity *
-                          (Heading(paste0("Value(", unique(form$Digit), ")"), character.only = TRUE) *
+                          (Heading(paste0("Sales(", unique(form$Digit), ")"), character.only = TRUE) *
                              table4$sub_value +
                              Heading("Con%") * table4$`Con%` +
                              Heading("Growth%") * table4$`Growth%` + Heading("Share%") * table4$`Share%` +

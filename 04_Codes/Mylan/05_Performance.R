@@ -163,9 +163,9 @@ Performance <- function(data,
            period = factor(period, levels = c(unique(table1$period), 
                                               unique(table2$period), 
                                               unique(table3$period))),
-           !!sym(paste0("Value(", unique(form$Digit), ")")) := value) %>% 
+           !!sym(paste0("Sales(", unique(form$Digit), ")")) := value) %>% 
     tabular(` ` * Heading() ~ 
-              period * (sym(paste0("Value(", unique(form$Digit), ")")) + 
+              period * (sym(paste0("Sales(", unique(form$Digit), ")")) + 
                           `Growth%` + `Share%` + `ΔShare%` + EI) * Heading() * identity, 
             data = .)
   

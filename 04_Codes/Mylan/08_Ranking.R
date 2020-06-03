@@ -97,7 +97,7 @@ Ranking <- function(data,
     left_join(table3, by = c("Product", "Manufactor", "MNC/Local")) %>% 
     full_join(table4, by = c("Product", "Manufactor", "MNC/Local")) %>% 
     mutate(` ` = factor(Product, levels = Product),
-           !!sym(paste0("Value(", unique(form$Digit), ")")) := value) %>% 
+           !!sym(paste0("Sales(", unique(form$Digit), ")")) := value) %>% 
     tabular(` ` ~ 
               Heading("Ranking") * identity * 
               (sym(sort(unique(data$MAT), decreasing = TRUE)[1]) + 
@@ -109,10 +109,11 @@ Ranking <- function(data,
               Heading("Product Info") * identity * 
               (Product + Manufactor + `MNC/Local`) + 
               Heading(sort(unique(data$MAT), decreasing = TRUE)[1], character.only = TRUE) * identity * 
-              (sym(paste0("Value(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
+              (sym(paste0("Sales(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
             data = .)
   
   table.file=as.matrix(table.file)
+  table.file[table.file == "NA"] <- NA_character_
   table.file
   write.xlsx(table.file,file=paste0(directory,'/',page,'.xlsx'),col.names=FALSE)
 }

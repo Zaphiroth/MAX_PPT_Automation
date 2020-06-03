@@ -20,7 +20,7 @@ MarketSize <- function(data,
     mutate(growth = value / lag(value) - 1) %>%
     right_join(distinct(form, Display), by = c("period" = "Display")) %>%
     select(Period = period,
-           !!sym(paste0("Value(", unique(form$Digit), ")")) := value,
+           !!sym(paste0("Sales(", unique(form$Digit), ")")) := value,
            `Growth%` = growth)
 
   table.file
