@@ -48,7 +48,7 @@ if (nrow(table.file) != 0) {
 if(ncol(table.file)>25) {
 table.file <- table.file[,-(ncol(table.file)-24)]
 }
-source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
+source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
 table.file <- DisplayFunction(table.file=table.file)
 table.file
 write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
