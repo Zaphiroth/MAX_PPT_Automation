@@ -70,7 +70,7 @@ ShareTrend <- function(data,
         select(-sequence) %>%
         rename(' ' = summary) 
       
-      source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
+      source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
       table.file <- DisplayFunction(table.file=table.file)
     }
 
