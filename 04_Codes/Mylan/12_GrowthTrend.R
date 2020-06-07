@@ -42,7 +42,7 @@ table.file <- table.file %>%
     rename(' ' = summary) %>% 
     right_join(distinct(form, Display), by = c(" " = "Display"))
 
-source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
+source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
 table.file <- DisplayFunction(table.file=table.file,type='MTH')
 write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 
@@ -89,7 +89,7 @@ write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
     if(ncol(table.file)>25) {
       table.file <- table.file[,-(ncol(table.file)-24)]
     }
-    source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
+    source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
     table.file <- DisplayFunction(table.file=table.file,type=unique(form$Period))
     write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
   } else {
