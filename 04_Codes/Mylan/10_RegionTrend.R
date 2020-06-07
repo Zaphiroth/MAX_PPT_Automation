@@ -42,6 +42,9 @@ RegionTrend <- function(data,
     arrange(desc(category),desc(Name)) %>%
     select(Name, everything(),-category,-region) %>%
     rename(' ' = Name) 
+  
+  source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
+  table.file <- DisplayFunction(table.file=table.file, type='MTH')
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
   
   } else {
@@ -89,7 +92,7 @@ RegionTrend <- function(data,
       
       if (nrow(table.file) != 0) {
         source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
-        table.file <- DisplayFunction(table.file=table.file)
+        table.file <- DisplayFunction(table.file=table.file,type=unique(form$Period))
         write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
       } else {
         print ('Warning: Insufficient Data to Calculate Rolling MAT Growth Rates!')
