@@ -4,7 +4,7 @@
 # Date:         2020-05-31
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-DisplayFunction <- function(table.file
+DisplayFunction <- function(table.file, type
                   ) {
   
 ref.table <- data.frame(period=colnames(table.file[-1])) %>%
