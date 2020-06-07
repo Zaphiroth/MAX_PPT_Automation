@@ -66,7 +66,7 @@ Trend <- function(data,
        rename(' ' = summary) 
        
        source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
-       table.file <- DisplayFunction(table.file=table.file)
+       table.file <- DisplayFunction(table.file=table.file, type=unique(form$Period))
    }
   
   table.file
