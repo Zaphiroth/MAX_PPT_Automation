@@ -66,7 +66,8 @@ RunGenerating <- function(inst,
     file.data <- data.frame(read_excel(filename), check.names = FALSE)
   })
 
-  raw.data <- bind_rows(file.list)
+  raw.data <- bind_rows(file.list) %>%
+    mutate(Date = as.numeric(Date))
 
   form.table <- data.frame(read_excel(form.dir), check.names = FALSE)
 
