@@ -78,6 +78,7 @@ source("04_Codes/Mylan/09_RegionPerformance.R", encoding = "UTF-8")
 source("04_Codes/Mylan/10_RegionTrend.R", encoding = "UTF-8")
 source("04_Codes/Mylan/11_CompetitorPerformance.R", encoding = "UTF-8")
 source("04_Codes/Mylan/12_GrowthTrend.R", encoding = "UTF-8")
+source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
 
 GenerateFile <- function(page,
                          data,

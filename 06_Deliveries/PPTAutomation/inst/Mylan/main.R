@@ -58,7 +58,6 @@ GenerateFile <- function(page,
   source(paste0(func.dir, "/RegionTrend.R"), encoding = "UTF-8")
   source(paste0(func.dir, "/CompetitorPerformance.R"), encoding = "UTF-8")
   source(paste0(func.dir, "/GrowthTrend.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/GrowthTrendMAT.R"), encoding = "UTF-8")
   source(paste0(func.dir, "/DisplayFunction.R"), encoding = "UTF-8")
 
   if (type == "MarketSize") {
