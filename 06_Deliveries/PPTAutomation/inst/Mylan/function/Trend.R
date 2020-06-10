@@ -11,7 +11,11 @@ Trend <- function(data,
                   digit,
                   directory) {
 
-  grouper <- unique(form$Period)
+  if(unique(form$Period)=='MTH') {
+    grouper <- 'MTH'
+  } else {
+    grouper <- 'MAT'
+  }
 
   table.file <- data %>%
     filter(!!sym(grouper) %in% tail(sort(unique(unlist(data[, grouper]))),
