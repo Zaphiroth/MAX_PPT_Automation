@@ -15,7 +15,16 @@ form.table <- data.frame(read_excel("03_Outputs/测试Form_table.xlsx"),
 
 
 ##---- Period ----
+if(grepl('Q',raw.data$Date[9],fixed=TRUE)==TRUE) {
+  raw.data <- raw.data %>% mutate(Year=str_sub(Date,1,4),Month=as.numeric(str_sub(Date,nchar(raw.data$Date[1])))) %>% 
+    mutate(Month=str_pad(as.character(Month*3),2,pad='0')) %>% mutate(Date=paste0(Year,Month)) %>% select(-Year,-Month)
+  cycle <- 4
+} else {
+  cycle <- 12
+}
+
 latest.date <- sort(unique(raw.data$Date), decreasing = TRUE)
+
 
 mat.date <- data.frame(Date = sort(unique(raw.data$Date))) %>% 
   mutate(ymd = ymd(stri_paste(Date, "01")),
@@ -23,34 +32,35 @@ mat.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
            ymd <= max(ymd) & ymd > max(ymd)-months(x = 12) ~ 
              stri_paste(stri_sub(latest.date[1], 3, 4), "M", stri_sub(latest.date[1], 5, 6), " MAT"),
            ymd <= max(ymd)-months(x = 12) & ymd > max(ymd)-months(x = 24) ~
-             stri_paste(stri_sub(latest.date[13], 3, 4), "M", stri_sub(latest.date[13], 5, 6), " MAT"),
+             stri_paste(stri_sub(latest.date[1+cycle], 3, 4), "M", stri_sub(latest.date[1+cycle], 5, 6), " MAT"),
            ymd <= max(ymd)-months(x = 24) & ymd > max(ymd)-months(x = 36) ~
-             stri_paste(stri_sub(latest.date[25], 3, 4), "M", stri_sub(latest.date[25], 5, 6), " MAT"),
+             stri_paste(stri_sub(latest.date[1+2*cycle], 3, 4), "M", stri_sub(latest.date[1+2*cycle], 5, 6), " MAT"),
            ymd <= max(ymd)-months(x = 36) & ymd > max(ymd)-months(x = 48) ~
-             stri_paste(stri_sub(latest.date[37], 3, 4), "M", stri_sub(latest.date[37], 5, 6), " MAT"),
+             stri_paste(stri_sub(latest.date[1+3*cycle], 3, 4), "M", stri_sub(latest.date[1+3*cycle], 5, 6), " MAT"),
            ymd <= max(ymd)-months(x = 48) & ymd > max(ymd)-months(x = 60) ~
-             stri_paste(stri_sub(latest.date[49], 3, 4), "M", stri_sub(latest.date[49], 5, 6), " MAT"),
+             stri_paste(stri_sub(latest.date[1+4*cycle], 3, 4), "M", stri_sub(latest.date[1+4*cycle], 5, 6), " MAT"),
            TRUE ~ NA_character_
          )) %>% 
   inner_join(raw.data, by = "Date") %>% 
   distinct(Date, MAT) %>% 
   add_count(MAT, name = "n") %>% 
-  filter(n == 12) %>% 
+  filter(n == cycle) %>% 
   select(Date, MAT)
+
 
 ytd.date <- data.frame(Date = sort(unique(raw.data$Date))) %>% 
   mutate(ymd = ymd(stri_paste(Date, "01")),
          YTD = case_when(
            ymd <= max(ymd) & stri_sub(Date, 1, 4) == stri_sub(latest.date[1], 1, 4) ~ 
              stri_paste(stri_sub(latest.date[1], 3, 4), "M", stri_sub(latest.date[1], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 12) & stri_sub(Date, 1, 4) == stri_sub(latest.date[13], 1, 4) ~
-             stri_paste(stri_sub(latest.date[13], 3, 4), "M", stri_sub(latest.date[13], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 24) & stri_sub(Date, 1, 4) == stri_sub(latest.date[25], 1, 4) ~
-             stri_paste(stri_sub(latest.date[25], 3, 4), "M", stri_sub(latest.date[25], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 36) & stri_sub(Date, 1, 4) == stri_sub(latest.date[37], 1, 4) ~
-             stri_paste(stri_sub(latest.date[37], 3, 4), "M", stri_sub(latest.date[37], 5, 6), " YTD"),
-           ymd <= max(ymd)-months(x = 48) & stri_sub(Date, 1, 4) == stri_sub(latest.date[49], 1, 4) ~
-             stri_paste(stri_sub(latest.date[49], 3, 4), "M", stri_sub(latest.date[49], 5, 6), " YTD"),
+           ymd <= max(ymd)-months(x = 12) & stri_sub(Date, 1, 4) == stri_sub(latest.date[1+cycle], 1, 4) ~
+             stri_paste(stri_sub(latest.date[1+cycle], 3, 4), "M", stri_sub(latest.date[1+cycle], 5, 6), " YTD"),
+           ymd <= max(ymd)-months(x = 24) & stri_sub(Date, 1, 4) == stri_sub(latest.date[1+2*cycle], 1, 4) ~
+             stri_paste(stri_sub(latest.date[1+2*cycle], 3, 4), "M", stri_sub(latest.date[1+2*cycle], 5, 6), " YTD"),
+           ymd <= max(ymd)-months(x = 36) & stri_sub(Date, 1, 4) == stri_sub(latest.date[1+3*cycle], 1, 4) ~
+             stri_paste(stri_sub(latest.date[1+3*cycle], 3, 4), "M", stri_sub(latest.date[1+3*cycle], 5, 6), " YTD"),
+           ymd <= max(ymd)-months(x = 48) & stri_sub(Date, 1, 4) == stri_sub(latest.date[1+4*cycle], 1, 4) ~
+             stri_paste(stri_sub(latest.date[1+4*cycle], 3, 4), "M", stri_sub(latest.date[1+4*cycle], 5, 6), " YTD"),
            TRUE ~ NA_character_
          )) %>% 
   select(Date, YTD)
@@ -67,18 +77,32 @@ data <- raw.data %>%
 
 
 ##---- Generation function ----
-source("04_Codes/Mylan/02_MarketSize.R", encoding = "UTF-8")
-source("04_Codes/Mylan/03_SubMarketShare.R", encoding = "UTF-8")
-source("04_Codes/Mylan/04_SubMarketGrowth.R", encoding = "UTF-8")
-source("04_Codes/Mylan/05_Performance.R", encoding = "UTF-8")
-source("04_Codes/Mylan/06_Trend.R", encoding = "UTF-8")
-source("04_Codes/Mylan/07_ShareTrend.R", encoding = "UTF-8")
-source("04_Codes/Mylan/08_Ranking.R", encoding = "UTF-8")
-source("04_Codes/Mylan/09_RegionPerformance.R", encoding = "UTF-8")
-source("04_Codes/Mylan/10_RegionTrend.R", encoding = "UTF-8")
-source("04_Codes/Mylan/11_CompetitorPerformance.R", encoding = "UTF-8")
-source("04_Codes/Mylan/12_GrowthTrend.R", encoding = "UTF-8")
-source("04_Codes/Mylan/14_DisplayFunction.R", encoding = "UTF-8")
+if (cylce==4) {
+  source("04_Codes/Maylan/02_MarketSizeQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/03_SubMarketShareQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/04_SubMarketGrowthQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/05_PerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/06_TrendQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/07_ShareTrendQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/08_RankingQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/09_RegionPerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/10_RegionTrendQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/11_CompetitorPerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/12_GrowthTrendQ.R", encoding = "UTF-8") 
+
+} else {
+  source("04_Codes/Maylan/02_MarketSize.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/03_SubMarketShare.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/04_SubMarketGrowth.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/05_Performance.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/06_Trend.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/07_ShareTrend.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/08_Ranking.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/09_RegionPerformance.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/10_RegionTrend.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/11_CompetitorPerformance.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/12_GrowthTrend.R", encoding = "UTF-8")
+} 
 
 GenerateFile <- function(page,
                          data,
