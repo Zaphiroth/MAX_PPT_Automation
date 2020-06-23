@@ -47,18 +47,37 @@ GenerateFile <- function(page,
   }
 
   ##---- Calculate function ----
-  source(paste0(func.dir, "/MarketSize.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/SubMarketShare.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/SubMarketGrowth.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/Performance.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/Trend.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/ShareTrend.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/Ranking.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/RegionPerformance.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/RegionTrend.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/CompetitorPerformance.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/GrowthTrend.R"), encoding = "UTF-8")
-  source(paste0(func.dir, "/DisplayFunction.R"), encoding = "UTF-8")
+  if (cylce == 4) {
+    source(paste0(func.dir, "/MarketSizeQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/SubMarketShareQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/SubMarketGrowthQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/PerformanceQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/TrendQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/ShareTrendQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/RankingQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/RegionPerformanceQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/RegionTrendQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/CompetitorPerformanceQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/GrowthTrendQ.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/DisplayFunction.R"), encoding = "UTF-8")
+
+  } else if (cylce == 12) {
+    source(paste0(func.dir, "/MarketSize.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/SubMarketShare.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/SubMarketGrowth.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/Performance.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/Trend.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/ShareTrend.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/Ranking.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/RegionPerformance.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/RegionTrend.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/CompetitorPerformance.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/GrowthTrend.R"), encoding = "UTF-8")
+    source(paste0(func.dir, "/DisplayFunction.R"), encoding = "UTF-8")
+
+  } else {
+    stop("Date Error!")
+  }
 
   if (type == "MarketSize") {
     print(page)
@@ -105,7 +124,7 @@ GenerateFile <- function(page,
     GrowthTrend(data, form, page, digit, directory)
 
   } else {
-    break()
+    stop("Type Error!")
   }
 }
 

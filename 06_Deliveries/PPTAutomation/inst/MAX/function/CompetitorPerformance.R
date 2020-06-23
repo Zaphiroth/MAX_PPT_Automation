@@ -66,7 +66,7 @@ CompetitorPerformance <- function(data,
     rename(` ` = region)
 
   table.file
-  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
+  write.xlsx(table.file, paste0(directory, '/', page, '.xlsx'))
 }
 
 

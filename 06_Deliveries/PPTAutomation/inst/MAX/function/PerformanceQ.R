@@ -1,10 +1,8 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # ProjectName:  MAX PPT Automation
 # Purpose:      PPT Function
-# programmer:   Zhe Liu
-# Date:         2020-05-18
+# Date:         2020-06-18
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
 
 Performance <- function(data,
                         form,
@@ -12,7 +10,16 @@ Performance <- function(data,
                         digit,
                         directory) {
 
-  table1 <- data %>%
+  dataQ <- data %>%
+    mutate(MATY = str_sub(data$MAT, 1, 2),
+           YTDY = str_sub(data$YTD, 1, 2),
+           QT = as.numeric(str_sub(data$Date, 5, 6)) / 3) %>%
+    mutate(MAT = paste0(MATY, 'Q4 MAT'),
+           YTD = paste0(YTDY, 'Q4 YTD'),
+           MTH = paste0(MATY, 'Q', QT)) %>%
+    select(-MATY, -YTDY, -QT)
+
+  table1 <- dataQ %>%
     mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
@@ -37,7 +44,7 @@ Performance <- function(data,
     filter(period == max(period, na.rm = TRUE)) %>%
     mutate(period_name = "MAT")
 
-  table2 <- data %>%
+  table2 <- dataQ %>%
     mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
@@ -62,8 +69,8 @@ Performance <- function(data,
     filter(period == max(period, na.rm = TRUE)) %>%
     mutate(period_name = "YTD")
 
-  table3 <- data %>%
-    filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
+  table3 <- dataQ %>%
+    filter(stri_sub(MTH, 4, 4) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 4)) %>%
     mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
@@ -89,7 +96,7 @@ Performance <- function(data,
     mutate(period_name = "MTH")
 
   if (!is.na(unique(form$Summary2))) {
-    table4 <- data %>%
+    table4 <- dataQ %>%
       mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
                                      NA_character_))) %>%
@@ -109,7 +116,7 @@ Performance <- function(data,
       filter(period == max(period, na.rm = TRUE)) %>%
       mutate(period_name = "MAT")
 
-    table5 <- data %>%
+    table5 <- dataQ %>%
       mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
                                      NA_character_))) %>%
@@ -129,8 +136,8 @@ Performance <- function(data,
       filter(period == max(period, na.rm = TRUE)) %>%
       mutate(period_name = "YTD")
 
-    table6 <- data %>%
-      filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
+    table6 <- dataQ %>%
+      filter(stri_sub(MTH, 4, 4) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 4)) %>%
       mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
                               ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
                                      NA_character_))) %>%
@@ -173,5 +180,3 @@ Performance <- function(data,
   table.file
   write.xlsx(table.file, file = paste0(directory, '/', page, '.xlsx'), col.names = FALSE)
 }
-
-

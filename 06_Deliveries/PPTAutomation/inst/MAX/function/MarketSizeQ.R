@@ -1,8 +1,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # ProjectName:  MAX PPT Automation
-# Purpose:      PPT Function
-# programmer:   Zhe Liu
-# Date:         2020-05-18
+# Purpose:      Maylan PPT Function
+# Date:         2020-06-18
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
@@ -12,26 +11,24 @@ MarketSize <- function(data,
                        digit,
                        directory) {
 
-  last.date <- last(sort(unique(data$Date)))
-  last.year <- as.numeric(stri_sub(last.date, 3, 4))
-  display.year <- (last.year-4):last.year
-  display.date <- paste0(display.year, "M", stri_sub(last.date, 5, 6), " ", unique(form$Period))
-  display <- data.frame(period = display.date)
+  dataQ <- data %>%
+    mutate(MATY = str_sub(data$MAT, 1, 2),
+           YTDY = str_sub(data$YTD, 1, 2)) %>%
+    mutate(MAT = paste0(MATY, 'Q4 MAT'),
+           YTD = paste0(YTDY, 'Q4 YTD')) %>%
+    select(-MATY, -YTDY)
 
-  table.file <- data %>%
+  table.file <- dataQ %>%
     group_by(period = !!sym(unique(form$Period))) %>%
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
     ungroup() %>%
     arrange(period) %>%
     mutate(growth = value / lag(value) - 1) %>%
-    right_join(display, by = "period") %>%
+    right_join(distinct(form, Display), by = c("period" = "Display")) %>%
     select(Period = period,
-           !!sym(paste0("Sales(", unique(form$Digit), ")")) := value,
+           !!sym(paste0("Value(", unique(form$Digit), ")")) := value,
            `Growth%` = growth)
 
   table.file
   write.xlsx(table.file, paste0(directory, '/', page, '.xlsx'))
 }
-
-
-

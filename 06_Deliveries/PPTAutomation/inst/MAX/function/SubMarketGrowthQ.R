@@ -1,8 +1,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # ProjectName:  MAX PPT Automation
-# Purpose:      PPT Function
-# programmer:   Zhe Liu
-# Date:         2020-05-18
+# Purpose:      Maylan PPT Function
+# Date:         2020-06-18
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
@@ -11,8 +10,14 @@ SubMarketGrowth <- function(data,
                             page,
                             digit,
                             directory) {
+  dataQ <- data %>%
+    mutate(MATY = str_sub(data$MAT, 1, 2),
+           YTDY = str_sub(data$YTD, 1, 2)) %>%
+    mutate(MAT = paste0(MATY, 'Q4 MAT'),
+           YTD = paste0(YTDY, 'Q4 YTD')) %>%
+    select(-MATY, -YTDY)
 
-  table.file <- data %>%
+  table.file <- dataQ %>%
     group_by(period = !!sym(unique(form$Period)),
              sub_market = !!sym(unique(form$Summary1))) %>%
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%

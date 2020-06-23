@@ -1,8 +1,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # ProjectName:  MAX PPT Automation
-# Purpose:      PPT Function
-# programmer:   Zhe Liu
-# Date:         2020-05-15
+# Purpose:      Maylan PPT Function
+# Date:         2020-06-18
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
@@ -12,8 +11,17 @@ Ranking <- function(data,
                     digit,
                     directory) {
 
-  table1 <- data %>%
-    filter(MAT %in% head(sort(unique(data$MAT), decreasing = TRUE), 2),
+  dataQ <- data %>%
+    mutate(MATY = str_sub(data$MAT, 1, 2),
+           YTDY = str_sub(data$YTD, 1, 2),
+           QT = as.numeric(str_sub(data$Date, 5, 6)) / 3) %>%
+    mutate(MAT = paste0(MATY, 'Q4 MAT'),
+           YTD=paste0(YTDY, 'Q4 YTD'),
+           MTH=paste0(MATY, 'Q', QT)) %>%
+    select(-MATY, -YTDY, -QT)
+
+  table1 <- dataQ %>%
+    filter(MAT %in% head(sort(unique(dataQ$MAT), decreasing = TRUE), 2),
            !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>%
     group_by(period = MAT,
              Product = !!sym(unique(form$Summary1)),
@@ -26,10 +34,10 @@ Ranking <- function(data,
     ungroup() %>%
     setDT() %>%
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking") %>%
-    arrange(!!sym(sort(unique(data$MAT), decreasing = TRUE)[1]))
+    arrange(!!sym(sort(unique(dataQ$MAT), decreasing = TRUE)[1]))
 
-  table2 <- data %>%
-    filter(YTD %in% head(sort(unique(data$YTD), decreasing = TRUE), 2),
+  table2 <- dataQ %>%
+    filter(YTD %in% head(sort(unique(dataQ$YTD), decreasing = TRUE), 2),
            !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>%
     group_by(period = YTD,
              Product = !!sym(unique(form$Summary1)),
@@ -43,8 +51,8 @@ Ranking <- function(data,
     setDT() %>%
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
 
-  table3 <- data %>%
-    filter(MTH %in% sort(unique(data$MTH), decreasing = TRUE)[c(1, 13)],
+  table3 <- dataQ %>%
+    filter(MTH %in% head(sort(unique(dataQ$MTH), decreasing = TRUE), 2),
            !!sym(unique(form$Summary1)) %in% unique(form$Display)) %>%
     group_by(period = MTH,
              Product = !!sym(unique(form$Summary1)),
@@ -58,8 +66,8 @@ Ranking <- function(data,
     setDT() %>%
     dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking")
 
-  table4 <- data %>%
-    filter(MAT %in% head(sort(unique(data$MAT), decreasing = TRUE), 2)) %>%
+  table4 <- dataQ %>%
+    filter(MAT %in% head(sort(unique(dataQ$MAT), decreasing = TRUE), 2)) %>%
     group_by(period = MAT,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
@@ -84,9 +92,9 @@ Ranking <- function(data,
     arrange(period) %>%
     mutate(`Growth%` = value / lag(value) - 1) %>%
     ungroup() %>%
-    filter(period == max(period, na.rm = TRUE)) %>%
+    filter(period == max(period)) %>%
     select(-period) %>%
-    mutate(index_type = sort(unique(data$MAT), decreasing = TRUE)[1])
+    mutate(index_type = sort(unique(dataQ$MAT), decreasing = TRUE)[1])
 
   table5 <- table4 %>%
     select(Product, Manufactor, `MNC/Local`) %>%
@@ -97,23 +105,20 @@ Ranking <- function(data,
     left_join(table3, by = c("Product", "Manufactor", "MNC/Local")) %>%
     full_join(table4, by = c("Product", "Manufactor", "MNC/Local")) %>%
     mutate(` ` = factor(Product, levels = Product),
-           !!sym(paste0("Sales(", unique(form$Digit), ")")) := value) %>%
+           !!sym(paste0("Value(", unique(form$Digit), ")")) := value) %>%
     tabular(` ` ~
               Heading("Ranking") * identity *
-              (sym(sort(unique(data$MAT), decreasing = TRUE)[1]) +
-                 sym(sort(unique(data$MAT), decreasing = TRUE)[2]) +
-                 sym(sort(unique(data$YTD), decreasing = TRUE)[1]) +
-                 sym(sort(unique(data$YTD), decreasing = TRUE)[2]) +
-                 sym(sort(unique(data$MTH), decreasing = TRUE)[1]) +
-                 sym(sort(unique(data$MTH), decreasing = TRUE)[13])) +
+              (sym(sort(unique(dataQ$MAT), decreasing = TRUE)[1]) +
+                 sym(sort(unique(dataQ$MAT), decreasing = TRUE)[2]) +
+                 sym(sort(unique(dataQ$YTD), decreasing = TRUE)[1]) +
+                 sym(sort(unique(dataQ$YTD), decreasing = TRUE)[2])) +
               Heading("Product Info") * identity *
               (Product + Manufactor + `MNC/Local`) +
-              Heading(sort(unique(data$MAT), decreasing = TRUE)[1], character.only = TRUE) * identity *
-              (sym(paste0("Sales(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
+              Heading(sort(unique(dataQ$MAT), decreasing = TRUE)[1], character.only = TRUE) * identity *
+              (sym(paste0("Value(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
             data = .)
 
   table.file <- as.matrix(table.file)
-  table.file[table.file == "NA"] <- NA_character_
   table.file
   write.xlsx(table.file, file = paste0(directory, '/', page, '.xlsx'), col.names = FALSE)
 }

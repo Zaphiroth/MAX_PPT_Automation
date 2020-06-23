@@ -1,8 +1,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # ProjectName:  MAX PPT Automation
-# Purpose:      PPT Function
-# programmer:   Zhe Liu
-# Date:         2020-05-14
+# Purpose:      Maylan PPT Function
+# Date:         2020-06-18
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 Trend <- function(data,
@@ -11,15 +10,24 @@ Trend <- function(data,
                   digit,
                   directory) {
 
-  if(unique(form$Period) == 'MTH') {
-    grouper <- 'MTH'
-  } else {
-    grouper <- 'MAT'
-  }
+  dataQ <- data %>%
+    mutate(MATY = str_sub(data$MAT, 1, 2),
+           YTDY = str_sub(data$YTD, 1, 2),
+           QT = as.numeric(str_sub(data$Date, 5, 6)) / 3) %>%
+    mutate(MAT = paste0(MATY, 'Q4 MAT'),
+           YTD = paste0(YTDY, 'Q4 YTD'),
+           MTH = paste0(MATY, 'Q', QT)) %>%
+    select(-MATY, -YTDY, -QT)
 
-  table.file <- data %>%
-    filter(!!sym(grouper) %in% tail(sort(unique(unlist(data[, grouper]))),
-                                    min(24,length(unique(unlist(data[, grouper])))))) %>%
+  if(unique(form$Period) == 'MTH') {
+    grouper <- 'MTH' } else {
+      grouper <- 'MAT'
+    }
+
+  table.file <- dataQ %>%
+    filter(!!sym(grouper) %in%
+             tail(sort(unique(unlist(dataQ[, grouper]))),
+                  min(8, length(unique(unlist(dataQ[, grouper])))))) %>%
     mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others"))
@@ -53,7 +61,7 @@ Trend <- function(data,
                                  min(36, length(unique(PeriodMTH))))) %>%
       arrange(summary, PeriodMAT, PeriodMTH) %>%
       group_by(summary) %>%
-      mutate(RollValue = c(rep(NA,(rollparam - 1)), rollsum(value, rollparam))) %>%
+      mutate(RollValue = c(rep(NA, (rollparam - 1)), rollsum(value, rollparam))) %>%
       ungroup() %>%
       na.omit() %>%
       filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),
@@ -62,8 +70,8 @@ Trend <- function(data,
       select(period, summary, RollValue, -value, -PeriodMAT, -PeriodMTH) %>%
       spread(period, RollValue) %>%
       adorn_totals("row", na.rm = TRUE, name = "Total") %>%
-      mutate(sequence = ifelse(summary == 'Others', 2 ,
-                               ifelse(summary == 'Total', 3,
+      mutate(sequence = ifelse(summary == 'Others', 2,
+                               ifelse(summary=='Total', 3,
                                       1))) %>%
       arrange(sequence, summary) %>%
       select(-sequence) %>%
@@ -75,6 +83,3 @@ Trend <- function(data,
   table.file
   write.xlsx(table.file, paste0(directory, '/', page, '.xlsx'))
 }
-
-
-
