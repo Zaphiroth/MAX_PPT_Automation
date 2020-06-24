@@ -40,24 +40,19 @@ Trend <- function(data,
     
   } else  {
     
-    if (unique(form$Period)=='MAT') {
-      rollparam <- 12
-    } else {
-      rollparam <- 3
-    }
-    
+    rollparam <- 4
     table.file <- table.file %>%
       group_by(PeriodMAT = !!sym(grouper),
                PeriodMTH = MTH,
                summary) %>%
       summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
       ungroup() %>%
-      filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),min(36,length(unique(PeriodMTH))))) %>%
+      filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),min(12,length(unique(PeriodMTH))))) %>%
       arrange(summary,PeriodMAT, PeriodMTH) %>%
       group_by(summary) %>%
       mutate(RollValue=c(rep(NA,(rollparam-1)),rollsum(value,rollparam))) %>%
       ungroup() %>% na.omit() %>%
-      filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),min(24,length(unique(PeriodMTH))))) %>% 
+      filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),min(8,length(unique(PeriodMTH))))) %>% 
       mutate(period = paste(PeriodMTH,unique(form$Period),sep=' ')) %>%
       select(period,summary, RollValue,-value,-PeriodMAT,-PeriodMTH) %>%
       spread(period,RollValue) %>%
@@ -68,7 +63,7 @@ Trend <- function(data,
       select(-sequence) %>%
       rename(' ' = summary) 
     
-    source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
+    source("04_Codes/Maylan/14_DisplayFunctionQ.R", encoding = "UTF-8")
     table.file <- DisplayFunction(table.file=table.file, type=unique(form$Period))
   }
   
