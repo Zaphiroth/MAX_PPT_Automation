@@ -86,6 +86,7 @@ if (cylce==4) {
   source("04_Codes/Maylan/07_ShareTrendQ.R", encoding = "UTF-8")
   source("04_Codes/Maylan/08_RankingQ.R", encoding = "UTF-8")
   source("04_Codes/Maylan/09_RegionPerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Maylan/10_RegionTrendQ.R", encoding = "UTF-8")
   source("04_Codes/Maylan/11_CompetitorPerformanceQ.R", encoding = "UTF-8")
   source("04_Codes/Maylan/12_GrowthTrendQ.R", encoding = "UTF-8") 
 
