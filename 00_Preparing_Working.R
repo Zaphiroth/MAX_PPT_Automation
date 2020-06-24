@@ -38,8 +38,12 @@ suppressPackageStartupMessages({
 ##---- setup the directories ----
 system("mkdir 01_Background 02_Inputs 03_Outputs 04_Codes 05_Internal_Review 06_Deliveries")
 
-RunGenerating("Mylan", 
-              "E:/LZ/MAX_PPT_Automation/02_Inputs/test", 
-              "E:/LZ/MAX_PPT_Automation/03_Outputs/Form_table.xlsx", 
+RunGenerating("MAX", 
+              "E:/LZ/MAX_PPT_Automation/02_Inputs/MAX", 
+              "E:/LZ/MAX_PPT_Automation/03_Outputs/测试Form_table.xlsx", 
               "E:/LZ/MAX_PPT_Automation/05_Internal_Review/test1")
 
+RunGenerating("CMAX", 
+              "E:/LZ/MAX_PPT_Automation/02_Inputs/CMAX", 
+              "E:/LZ/MAX_PPT_Automation/03_Outputs/Form_table-CMAX.xlsx", 
+              "E:/LZ/MAX_PPT_Automation/05_Internal_Review/test2")
