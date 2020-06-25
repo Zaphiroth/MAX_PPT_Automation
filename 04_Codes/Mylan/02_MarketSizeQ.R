@@ -21,10 +21,23 @@ MarketSize <- function(data,
     ungroup() %>% 
     arrange(period) %>% 
     mutate(growth = value / lag(value) - 1) %>% 
-    right_join(distinct(form, Display), by = c("period" = "Display")) %>% 
     select(Period = period,
            !!sym(paste0("Value(", unique(form$Digit), ")")) := value,
            `Growth%` = growth)
+  
+  if(nrow(table.file) < 5) {
+    timer <- 5 - nrow(table.file)
+    refperiod <- as.character(table.file$Period[1])
+    refother <- substr(refperiod,3,nchar(refperiod))
+    refyear <- as.numeric(substr(refperiod,1,2))
+    newdf <- data.frame(matrix(nrow=timer,ncol=ncol(table.file)))
+    colnames(newdf) <- colnames(table.file)
+    for (i in 1: timer) {
+      refyear <- refyear -1
+      newdf$Period[timer+1-i] <- paste0(refyear,refother)
+    }
+    table.file <- rbind(newdf,table.file)
+  }
   
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
