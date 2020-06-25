@@ -10,9 +10,24 @@ SubMarketGrowth <- function(data,
                             page,
                             digit,
                             directory) {
-  dataQ <- data %>% mutate(MATY=str_sub(data$MAT,1,2), YTDY=str_sub(data$YTD,1,2)) %>%
-    mutate(MAT = paste0(MATY,'Q4 MAT'), YTD=paste0(YTDY,'Q4 YTD')) %>%
-    select(-MATY, -YTDY)
+  
+  dateformat <- data.frame(Date=sort(unique(data$Date)),Quarter=rep(NA,length(unique(data$Date))),
+                           Year=rep(NA,length(unique(data$Date))))
+  dateformat$Quarter <- as.numeric(substr(dateformat$Date[nrow(dateformat)],5,6))/3
+  timer <- nrow(dateformat)
+  refYr <- as.numeric(substr(dateformat$Date[nrow(dateformat)],3,4))
+  iter <- nrow(dateformat)/4
+  for (i in 1:iter){
+    for (t in 1:4) {
+      dateformat$Year[timer+1-t] <- refYr
+    }
+    timer <- timer - 4
+    refYr <- refYr -1
+  }
+  
+  dataQ <- data %>% left_join(dateformat, by = "Date") %>% 
+    mutate(MAT = paste0(Year,'Q', Quarter,' MAT'), YTD=paste0(Year,'Q', Quarter,' YTD')) %>%
+    select(-Quarter, -Year)
   
   table.file <- dataQ %>% 
     group_by(period = !!sym(unique(form$Period)),
