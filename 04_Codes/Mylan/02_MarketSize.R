@@ -13,8 +13,8 @@ MarketSize <- function(data,
                        directory) {
   
   last.date <- last(sort(unique(data$Date)))
-  last.year <- as.numeric(stri_sub(last.date, 3, 4))
-  display.year <- (last.year-4):last.year
+  last.year <- as.numeric(stri_sub(last.date, 1, 4))
+  display.year <- stri_sub((last.year-4):last.year, 3, 4)
   display.date <- paste0(display.year, "M", stri_sub(last.date, 5, 6), " ", unique(form$Period))
   display <- data.frame(period = display.date)
   

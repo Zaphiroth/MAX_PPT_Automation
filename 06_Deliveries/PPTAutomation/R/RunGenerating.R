@@ -66,8 +66,7 @@ RunGenerating <- function(inst,
     file.data <- data.frame(read_excel(filename), check.names = FALSE)
   })
 
-  raw.data <- bind_rows(file.list) %>%
-    mutate(Date = as.numeric(Date))
+  raw.data <- bind_rows(file.list)
 
   form.table <- data.frame(read_excel(form.dir), check.names = FALSE)
 
@@ -76,21 +75,21 @@ RunGenerating <- function(inst,
   }
 
   ##---- Set period ----
-  if(grepl('Q', raw.data$Date[9], fixed = TRUE) == TRUE) {
+  if(grepl('Q',raw.data$Date[9],fixed=TRUE)==TRUE) {
     raw.data <- raw.data %>%
-      mutate(Year = str_sub(Date, 1, 4),
-             Month = as.numeric(str_sub(Date, nchar(raw.data$Date[1]))),
-             Month = str_pad(as.character(Month * 3), 2, pad = '0'),
-             Date = paste0(Year, Month)) %>%
-      select(-Year, -Month)
+      mutate(Year=str_sub(Date,1,4),
+             Month=as.numeric(str_sub(Date,nchar(raw.data$Date[1])))) %>%
+      mutate(Month=str_pad(as.character(Month*3),2,pad='0')) %>%
+      mutate(Date=paste0(Year,Month)) %>%
+      select(-Year,-Month)
 
     cycle <- 4
-
   } else {
     cycle <- 12
   }
 
   latest.date <- sort(unique(raw.data$Date), decreasing = TRUE)
+
 
   mat.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
     mutate(ymd = ymd(stri_paste(Date, "01")),
@@ -147,7 +146,8 @@ RunGenerating <- function(inst,
     select(Date, YTD)
 
   mth.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
-    mutate(MTH = stri_paste(stri_sub(Date, 3, 4), "M", stri_sub(Date, 5, 6))) %>%
+    mutate(MTH = stri_paste(stri_sub(Date, 3, 4), "M",
+                            stri_sub(Date, 5, 6))) %>%
     select(Date, MTH)
 
   data <- raw.data %>%

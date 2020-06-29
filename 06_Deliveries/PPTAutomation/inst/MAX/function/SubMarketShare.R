@@ -12,12 +12,16 @@ SubMarketShare <- function(data,
                            digit,
                            directory) {
 
-  display <- data.frame(period = seq(max(data$Date), max(data$Date)-400, -100)) %>%
+  display <- data.frame(period = seq(max(data$Date),
+                                     max(data$Date)-400,
+                                     -100)) %>%
     arrange(period) %>%
-    mutate(period = paste0(stri_sub(period, 3, 4), "M", stri_sub(period, 5, 6), " ", unique(form$Period)),
+    mutate(period = paste0(stri_sub(period, 3, 4), "M", stri_sub(period, 5, 6),
+                           " ", unique(form$Period)),
            period_index = paste0(period, " Share")) %>%
     setDT() %>%
-    melt(measure.vars = c("period", "period_index"), value.name = "period_index") %>%
+    melt(measure.vars = c("period", "period_index"),
+         value.name = "period_index") %>%
     select(period_index) %>%
     setDF() %>%
     merge(distinct(form, sub_market = Display))
@@ -25,7 +29,8 @@ SubMarketShare <- function(data,
   table.file <- data %>%
     group_by(period = !!sym(unique(form$Period)),
              sub_market = !!sym(unique(form$Summary1))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     filter(!is.na(period)) %>%
     group_by(period) %>%

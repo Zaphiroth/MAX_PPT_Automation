@@ -13,11 +13,13 @@ Performance <- function(data,
                         directory) {
 
   table1 <- data %>%
-    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
+    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in%
+                              unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
     group_by(period = MAT, summary) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     filter(!is.na(period)) %>%
     setDT() %>%
@@ -38,11 +40,13 @@ Performance <- function(data,
     mutate(period_name = "MAT")
 
   table2 <- data %>%
-    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
+    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in%
+                              unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
     group_by(period = YTD, summary) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     filter(!is.na(period)) %>%
     setDT() %>%
@@ -64,11 +68,13 @@ Performance <- function(data,
 
   table3 <- data %>%
     filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
-    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
+    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in%
+                              unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others")) %>%
     group_by(period = MTH, summary) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     filter(!is.na(period)) %>%
     setDT() %>%
@@ -90,11 +96,14 @@ Performance <- function(data,
 
   if (!is.na(unique(form$Summary2))) {
     table4 <- data %>%
-      mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
-                              ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
+      mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC",
+                              "TTL MNC",
+                              ifelse(!!sym(unique(form$Summary2)) == "LOCAL",
+                                     "TTL Local",
                                      NA_character_))) %>%
       group_by(period = MAT, summary) %>%
-      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                  digit) %>%
       ungroup() %>%
       filter(!is.na(period)) %>%
       group_by(period) %>%
@@ -110,11 +119,14 @@ Performance <- function(data,
       mutate(period_name = "MAT")
 
     table5 <- data %>%
-      mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
-                              ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
+      mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC",
+                              "TTL MNC",
+                              ifelse(!!sym(unique(form$Summary2)) == "LOCAL",
+                                     "TTL Local",
                                      NA_character_))) %>%
       group_by(period = YTD, summary) %>%
-      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                  digit) %>%
       ungroup() %>%
       filter(!is.na(period)) %>%
       group_by(period) %>%
@@ -130,12 +142,16 @@ Performance <- function(data,
       mutate(period_name = "YTD")
 
     table6 <- data %>%
-      filter(stri_sub(MTH, 4, 5) %in% stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
-      mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC", "TTL MNC",
-                              ifelse(!!sym(unique(form$Summary2)) == "LOCAL", "TTL Local",
+      filter(stri_sub(MTH, 4, 5) %in%
+               stri_sub(max(MTH, na.rm = TRUE), 4, 5)) %>%
+      mutate(summary = ifelse(!!sym(unique(form$Summary2)) == "MNC",
+                              "TTL MNC",
+                              ifelse(!!sym(unique(form$Summary2)) == "LOCAL",
+                                     "TTL Local",
                                      NA_character_))) %>%
       group_by(period = MTH, summary) %>%
-      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                  digit) %>%
       ungroup() %>%
       filter(!is.na(period)) %>%
       group_by(period) %>%
@@ -158,7 +174,8 @@ Performance <- function(data,
 
   table.file <- bind_rows(table1, table2, table3,
                           table4, table5, table6) %>%
-    filter(period_name %in% unlist(stri_split_fixed(unique(form$Period), "+"))) %>%
+    filter(period_name %in%
+             unlist(stri_split_fixed(unique(form$Period), "+"))) %>%
     mutate(` ` = factor(summary, levels = unique(form$Display)),
            period = factor(period, levels = c(unique(table1$period),
                                               unique(table2$period),
@@ -166,12 +183,15 @@ Performance <- function(data,
            !!sym(paste0("Sales(", unique(form$Digit), ")")) := value) %>%
     tabular(` ` * Heading() ~
               period * (sym(paste0("Sales(", unique(form$Digit), ")")) +
-                          `Growth%` + `Share%` + `ΔShare%` + EI) * Heading() * identity,
+                          `Growth%` + `Share%` + `ΔShare%` + EI) *
+              Heading() * identity,
             data = .)
 
   table.file <- as.matrix(table.file)
   table.file
-  write.xlsx(table.file, file = paste0(directory, '/', page, '.xlsx'), col.names = FALSE)
+  write.xlsx(table.file,
+             file = paste0(directory, '/', page, '.xlsx'),
+             col.names = FALSE)
 }
 
 

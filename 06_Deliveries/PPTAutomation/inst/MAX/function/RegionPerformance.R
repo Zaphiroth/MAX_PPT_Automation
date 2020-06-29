@@ -16,7 +16,8 @@ RegionPerformance <- function(data,
     group_by(period = !!sym(unique(form$Period)),
              region = !!sym(unique(form$Summary1)),
              mnf_type = !!sym(unique(form$Summary2))) %>%
-    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     setDT() %>%
     dcast(period + region ~ mnf_type, value.var = "sub_value", fill = 0) %>%
@@ -42,7 +43,8 @@ RegionPerformance <- function(data,
     group_by(period = !!sym(unique(form$Period)),
              region = !!sym(unique(form$Summary1)),
              mnf_type = !!sym(unique(form$Summary2))) %>%
-    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     setDT() %>%
     dcast(period + region ~ mnf_type, value.var = "sub_value", fill = 0) %>%
@@ -74,7 +76,8 @@ RegionPerformance <- function(data,
     group_by(period = !!sym(unique(form$Period)),
              region = !!sym(unique(form$Summary1)),
              product = !!sym(unique(form$Summary3))) %>%
-    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period, region) %>%
     mutate(complete_value = sum(sub_value, na.rm = TRUE)) %>%
@@ -103,7 +106,8 @@ RegionPerformance <- function(data,
     group_by(period = !!sym(unique(form$Period)),
              region = !!sym(unique(form$Summary1)),
              product = !!sym(unique(form$Summary3))) %>%
-    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period, region) %>%
     mutate(complete_value = sum(sub_value, na.rm = TRUE)) %>%
@@ -125,7 +129,8 @@ RegionPerformance <- function(data,
     bind_rows(table3) %>%
     mutate(region = factor(region, levels = table2$region)) %>%
     right_join(distinct(table2, region), by = "region") %>%
-    mutate(type = paste0("Internal Product Performance ", first(na.omit(period)))) %>%
+    mutate(type = paste0("Internal Product Performance ",
+                         first(na.omit(period)))) %>%
     select(region,
            sub_value,
            `Con%`,
@@ -135,23 +140,32 @@ RegionPerformance <- function(data,
            EI,
            type)
 
-  table.file <- tabular(Heading(unique(form$Summary1), character.only = TRUE) * table2$region ~
-                          Heading(unique(table2$type), character.only = TRUE) * identity *
-                          (Heading(paste0("Market(", unique(form$Digit), ")"), character.only = TRUE) *
+  table.file <- tabular(Heading(unique(form$Summary1), character.only = TRUE) *
+                          table2$region ~
+                          Heading(unique(table2$type), character.only = TRUE) *
+                          identity *
+                          (Heading(paste0("Market(", unique(form$Digit), ")"),
+                                   character.only = TRUE) *
                              table2$complete_value +
                              Heading("Con%") * table2$`Con%` +
                              Heading("Growth%") * table2$`Growth%` +
                              Heading("MNC%") * table2$`MNC%`) +
-                          Heading(unique(table4$type), character.only = TRUE) * identity *
-                          (Heading(paste0("Sales(", unique(form$Digit), ")"), character.only = TRUE) *
+                          Heading(unique(table4$type), character.only = TRUE) *
+                          identity *
+                          (Heading(paste0("Sales(", unique(form$Digit), ")"),
+                                   character.only = TRUE) *
                              table4$sub_value +
                              Heading("Con%") * table4$`Con%` +
-                             Heading("Growth%") * table4$`Growth%` + Heading("Share%") * table4$`Share%` +
-                             Heading("ΔShare%") * table4$`ΔShare%` + Heading("EI") * table4$EI))
+                             Heading("Growth%") * table4$`Growth%` +
+                             Heading("Share%") * table4$`Share%` +
+                             Heading("ΔShare%") * table4$`ΔShare%` +
+                             Heading("EI") * table4$EI))
 
   table.file <- as.matrix(table.file)
   table.file
-  write.xlsx(table.file, file = paste0(directory, '/', page, '.xlsx'), col.names = FALSE)
+  write.xlsx(table.file,
+             file = paste0(directory, '/', page, '.xlsx'),
+             col.names = FALSE)
 }
 
 

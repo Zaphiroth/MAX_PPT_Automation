@@ -12,7 +12,8 @@ GrowthTrend <- function(data,
                         directory) {
 
   table.file <- data %>%
-    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
+    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in%
+                              unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others"))
 
@@ -66,7 +67,8 @@ GrowthTrend <- function(data,
                                  min(48, length(unique(PeriodMTH))))) %>%
       arrange(summary, PeriodMAT, PeriodMTH) %>%
       group_by(summary) %>%
-      mutate(RollValue = c(rep(NA, (rollparam - 1)), rollsum(Value, rollparam))) %>%
+      mutate(RollValue = c(rep(NA, (rollparam - 1)),
+                           rollsum(Value, rollparam))) %>%
       ungroup() %>%
       na.omit() %>%
       mutate(period = paste(PeriodMTH, 'MAT', sep=' ')) %>%
@@ -98,7 +100,8 @@ GrowthTrend <- function(data,
                                     type = unique(form$Period))
       write.xlsx(table.file, paste0(directory, '/', page, '.xlsx'))
     } else {
-      print ('Warning: Insufficient Data to Calculate Rolling MAT Growth Rates!')
+      print ('Warning: Insufficient Data to Calculate
+             Rolling MAT Growth Rates!')
     }
   }
 }

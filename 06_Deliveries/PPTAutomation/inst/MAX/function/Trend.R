@@ -18,16 +18,19 @@ Trend <- function(data,
   }
 
   table.file <- data %>%
-    filter(!!sym(grouper) %in% tail(sort(unique(unlist(data[, grouper]))),
-                                    min(24,length(unique(unlist(data[, grouper])))))) %>%
-    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in% unique(form$Display),
+    filter(!!sym(grouper) %in%
+             tail(sort(unique(unlist(data[, grouper]))),
+                  min(24,length(unique(unlist(data[, grouper])))))) %>%
+    mutate(summary = ifelse(!!sym(unique(form$Summary1)) %in%
+                              unique(form$Display),
                             !!sym(unique(form$Summary1)),
                             "Others"))
 
   if (unique(form$Period) == 'MTH') {
     table.file <- table.file %>%
       group_by(period = !!sym(unique(form$Period)), summary) %>%
-      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                  digit) %>%
       ungroup() %>%
       arrange(period) %>%
       setDT() %>%
@@ -47,13 +50,15 @@ Trend <- function(data,
       group_by(PeriodMAT = !!sym(grouper),
                PeriodMTH = MTH,
                summary) %>%
-      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                  digit) %>%
       ungroup() %>%
       filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),
                                  min(36, length(unique(PeriodMTH))))) %>%
       arrange(summary, PeriodMAT, PeriodMTH) %>%
       group_by(summary) %>%
-      mutate(RollValue = c(rep(NA,(rollparam - 1)), rollsum(value, rollparam))) %>%
+      mutate(RollValue = c(rep(NA,(rollparam - 1)),
+                           rollsum(value, rollparam))) %>%
       ungroup() %>%
       na.omit() %>%
       filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),
@@ -69,7 +74,8 @@ Trend <- function(data,
       select(-sequence) %>%
       rename(' ' = summary)
 
-    table.file <- DisplayFunction(table.file = table.file, type = unique(form$Period))
+    table.file <- DisplayFunction(table.file = table.file,
+                                  type = unique(form$Period))
   }
 
   table.file

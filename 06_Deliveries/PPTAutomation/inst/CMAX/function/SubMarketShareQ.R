@@ -11,17 +11,31 @@ SubMarketShare <- function(data,
                            digit,
                            directory) {
 
-  dataQ <- data %>%
-    mutate(MATY = str_sub(data$MAT, 1, 2),
-           YTDY = str_sub(data$YTD, 1, 2)) %>%
-    mutate(MAT = paste0(MATY, 'Q4 MAT'),
-           YTD = paste0(YTDY, 'Q4 YTD')) %>%
-    select(-MATY, -YTDY)
+ dateformat <- data.frame(Date=sort(unique(data$Date)),
+                          Quarter=rep(NA,length(unique(data$Date))),
+                           Year=rep(NA,length(unique(data$Date))))
+  dateformat$Quarter <- as.numeric(substr(dateformat$Date[nrow(dateformat)],5,6))/3
+  timer <- nrow(dateformat)
+  refYr <- as.numeric(substr(dateformat$Date[nrow(dateformat)],3,4))
+  iter <- nrow(dateformat)/4
+  for (i in 1:iter){
+    for (t in 1:4) {
+      dateformat$Year[timer+1-t] <- refYr
+    }
+    timer <- timer - 4
+    refYr <- refYr -1
+  }
+
+  dataQ <- data %>% left_join(dateformat, by = "Date") %>%
+    mutate(MAT = paste0(Year,'Q', Quarter,' MAT'),
+           YTD=paste0(Year,'Q', Quarter,' YTD')) %>%
+    select(-Quarter, -Year)
 
   table.file <- dataQ %>%
     group_by(period = !!sym(unique(form$Period)),
              sub_market = !!sym(unique(form$Summary1))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period) %>%
     mutate(share = value / sum(value, na.rm = TRUE)) %>%
@@ -41,37 +55,36 @@ SubMarketShare <- function(data,
 
 
   pdnm <- colnames(table.file[-1])
-  if (length(grep("^(?=\\bNA\\b).*", pdnm,value = TRUE, perl = TRUE)) != 0) {
-    pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*", pdnm, value = TRUE, perl = TRUE)]
+  if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
+    pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)]
   }
 
   countpd <- length(pdnm)
-  if (countpd < 5) {
+  if (countpd<5) {
     timer <- 5 - countpd
     nleng <- nchar(pdnm[1])
-    ref.table <- data.frame(PD = pdnm) %>%
-      mutate(Year = str_sub(PD, 1, 2),
-             Month = str_sub(PD, 3, nleng))
-    newdf <- data.frame(month = rep(unique(ref.table$Month), timer),
-                        year = rep(NA, timer))
+    ref.table <- data.frame(PD=pdnm) %>%
+      mutate(Year=str_sub(PD,1,2),
+             Month=str_sub(PD,3,nleng))
+    newdf <- data.frame(month=rep(unique(ref.table$Month),timer),
+                        year=rep(NA,timer))
     yrindex <- as.numeric(ref.table$Year[1])
     for (i in 1:timer) {
       yrindex <- yrindex -1
-      newdf$year[timer + 1 - i] <- yrindex
+      newdf$year[timer+1-i] <- yrindex
     }
-    newdf <- newdf %>%
-      mutate(pd = paste0(year, month))
+    newdf <- newdf %>% mutate(pd=paste0(year,month))
     ncolnm <- length(unique(newdf$pd))
-    adddf <- data.frame(matrix(nrow = nrow(table.file), ncol = ncolnm))
+    adddf <- data.frame(matrix(nrow=nrow(table.file),ncol=ncolnm))
     colnames(adddf) <- unique(newdf$pd)
-    table.file <- cbind(table.file[1], adddf, table.file[-1])
+    table.file <- cbind(table.file[1],adddf,table.file[-1])
 
     cdnm <- colnames(table.file[-1])
-    if (length(grep("^(?=\\bNA\\b).*", cdnm, value = TRUE, perl = TRUE)) != 0) {
-      table.file <- table.file[, -ncol(table.file)]
+    if (length(grep("^(?=\\bNA\\b).*",cdnm,value = TRUE, perl = TRUE)) != 0) {
+      table.file <- table.file[,-ncol(table.file)]
     }
   }
 
   table.file
-  write.xlsx(table.file, paste0(directory, '/', page, '.xlsx'))
+  write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }

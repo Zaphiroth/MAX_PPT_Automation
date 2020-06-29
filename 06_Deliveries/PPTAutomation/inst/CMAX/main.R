@@ -21,7 +21,8 @@ GenerateFile <- function(page,
     unlist()
 
   if (!is.na(unique(form$Restriction))) {
-    restriction <- stri_split_fixed(unique(form$Restriction), ",", simplify = TRUE) %>%
+    restriction <- stri_split_fixed(unique(form$Restriction), ",",
+                                    simplify = TRUE) %>%
       as.character()
 
     for (i in restriction) {

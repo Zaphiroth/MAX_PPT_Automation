@@ -18,10 +18,10 @@ CompetitorPerformance <- function(data,
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>%
     filter(!is.na(period)) %>%
-    filter(period %in% tail(unique(period),2) & product %in% unique(form$Internal)) %>%
+    filter(period %in% tail(unique(period),2),
+           product %in% unique(form$Internal)) %>%
     mutate(type = product, sequence = 0) %>%
     select(type,period,region,sub_value,sequence)
-
 
   table2 <- data %>%
     filter (!!sym(unique(form$Summary2)) != unique(form$Internal) ) %>%
@@ -38,7 +38,6 @@ CompetitorPerformance <- function(data,
     mutate(sequence=ifelse(type=='Others',2,1))%>%
     select(type,period,region,sub_value,sequence)
 
-
   table.file <- bind_rows(table1, table2) %>%
     group_by(period,region) %>%
     mutate(total = sum(sub_value, na.rm = TRUE)) %>%
@@ -54,12 +53,15 @@ CompetitorPerformance <- function(data,
          measure.vars = c("Share", "EI"),
          variable.factor = FALSE) %>%
     unite("type", variable, type, sep = " _ ") %>%
-    mutate(type = factor(type, levels = c(paste0("Share _ ", c(unique(form$Internal),
-                                                               unique(form$Display),
-                                                               "Others")),
-                                          paste0("EI _ ", c(unique(form$Internal),
-                                                            unique(form$Display),
-                                                            "Others"))))) %>%
+    mutate(type = factor(type,
+                         levels = c(paste0("Share _ ",
+                                           c(unique(form$Internal),
+                                             unique(form$Display),
+                                             "Others")),
+                                    paste0("EI _ ",
+                                           c(unique(form$Internal),
+                                             unique(form$Display),
+                                             "Others"))))) %>%
     setDT() %>%
     dcast(region ~ type, value.var = "value") %>%
     arrange(region) %>%

@@ -59,13 +59,15 @@ RegionTrend <- function(data,
       group_by(PeriodMAT = !!sym(grouper),
                PeriodMTH = MTH,
                summary = !!sym(unique(form$Summary1))) %>%
-      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+      summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                  digit) %>%
       ungroup() %>%
       filter(PeriodMTH %in% tail(sort(unique(PeriodMTH)),
                                  min(48, length(unique(PeriodMTH))))) %>%
       arrange(summary, PeriodMAT, PeriodMTH) %>%
       group_by(summary) %>%
-      mutate(RollValue = c(rep(NA, (rollparam - 1)), rollsum(value, rollparam))) %>%
+      mutate(RollValue = c(rep(NA, (rollparam - 1)),
+                           rollsum(value, rollparam))) %>%
       ungroup() %>%
       na.omit() %>%
       mutate(period = paste(PeriodMTH, unique(form$Period), sep=' ')) %>%
@@ -94,10 +96,12 @@ RegionTrend <- function(data,
     }
 
     if (nrow(table.file) != 0) {
-      table.file <- DisplayFunction(table.file = table.file, type = unique(form$Period))
+      table.file <- DisplayFunction(table.file = table.file,
+                                    type = unique(form$Period))
       write.xlsx(table.file, paste0(directory, '/', page, '.xlsx'))
     } else {
-      print ('Warning: Insufficient Data to Calculate Rolling MAT Growth Rates!')
+      print ('Warning: Insufficient Data to Calculate
+             Rolling MAT Growth Rates!')
     }
   }
 }

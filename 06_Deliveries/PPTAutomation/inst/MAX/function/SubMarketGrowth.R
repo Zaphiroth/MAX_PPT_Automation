@@ -34,7 +34,8 @@ SubMarketGrowth <- function(data,
 
   pdnm <- colnames(table.file[-1])
   if (length(grep("^(?=\\bNA\\b).*", pdnm, value = TRUE, perl = TRUE)) != 0) {
-    pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*", pdnm, value = TRUE, perl = TRUE)]
+    pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*", pdnm,
+                              value = TRUE, perl = TRUE)]
   }
 
   countpd <- length(pdnm)

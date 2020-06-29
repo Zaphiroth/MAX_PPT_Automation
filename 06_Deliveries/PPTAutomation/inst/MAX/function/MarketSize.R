@@ -15,12 +15,14 @@ MarketSize <- function(data,
   last.date <- last(sort(unique(data$Date)))
   last.year <- as.numeric(stri_sub(last.date, 3, 4))
   display.year <- (last.year-4):last.year
-  display.date <- paste0(display.year, "M", stri_sub(last.date, 5, 6), " ", unique(form$Period))
+  display.date <- paste0(display.year, "M", stri_sub(last.date, 5, 6), " ",
+                         unique(form$Period))
   display <- data.frame(period = display.date)
 
   table.file <- data %>%
     group_by(period = !!sym(unique(form$Period))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     arrange(period) %>%
     mutate(growth = value / lag(value) - 1) %>%

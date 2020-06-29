@@ -19,13 +19,15 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period) %>%
     mutate(Ranking = rank(-value)) %>%
     ungroup() %>%
     setDT() %>%
-    dcast(Product + Manufactor + `MNC/Local` ~ period, value.var = "Ranking") %>%
+    dcast(Product + Manufactor + `MNC/Local` ~ period,
+          value.var = "Ranking") %>%
     arrange(!!sym(sort(unique(data$MAT), decreasing = TRUE)[1]))
 
   table2 <- data %>%
@@ -35,7 +37,8 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period) %>%
     mutate(Ranking = rank(-value)) %>%
@@ -50,7 +53,8 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period) %>%
     mutate(Ranking = rank(-value)) %>%
@@ -64,7 +68,8 @@ Ranking <- function(data,
              Product = !!sym(unique(form$Summary1)),
              Manufactor = !!sym(unique(form$Summary2)),
              `MNC/Local` = !!sym(unique(form$Summary3))) %>%
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
+    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
+                digit) %>%
     ungroup() %>%
     group_by(period) %>%
     mutate(`Share%` = value / sum(value, na.rm = TRUE)) %>%
@@ -72,14 +77,20 @@ Ranking <- function(data,
     filter(Product %in% unique(form$Display)) %>%
     setDT() %>%
     melt(id.vars = c("Product", "Manufactor", "MNC/Local", "period"),
-         variable.factor = FALSE, variable.name = "index", value.name = "value") %>%
+         variable.factor = FALSE,
+         variable.name = "index",
+         value.name = "value") %>%
     unite(period_index, period, index) %>%
-    dcast(Product + Manufactor + `MNC/Local` ~ period_index, value.var = "value") %>%
+    dcast(Product + Manufactor + `MNC/Local` ~ period_index,
+          value.var = "value") %>%
     adorn_totals("row", fill = NA_character_, na.rm = TRUE, name = "Sum") %>%
-    melt(id.vars = c("Product", "Manufactor", "MNC/Local"), variable.factor = FALSE,
-         variable.name = "period_index", value.name = "value") %>%
+    melt(id.vars = c("Product", "Manufactor", "MNC/Local"),
+         variable.factor = FALSE,
+         variable.name = "period_index",
+         value.name = "value") %>%
     separate(period_index, c("period", "index"), sep = "_") %>%
-    dcast(Product + Manufactor + `MNC/Local` + period ~ index, value.var = "value") %>%
+    dcast(Product + Manufactor + `MNC/Local` + period ~ index,
+          value.var = "value") %>%
     group_by(Product) %>%
     arrange(period) %>%
     mutate(`Growth%` = value / lag(value) - 1) %>%
@@ -108,14 +119,18 @@ Ranking <- function(data,
                  sym(sort(unique(data$MTH), decreasing = TRUE)[13])) +
               Heading("Product Info") * identity *
               (Product + Manufactor + `MNC/Local`) +
-              Heading(sort(unique(data$MAT), decreasing = TRUE)[1], character.only = TRUE) * identity *
-              (sym(paste0("Sales(", unique(form$Digit), ")")) + `Growth%` + `Share%`),
+              Heading(sort(unique(data$MAT), decreasing = TRUE)[1],
+                      character.only = TRUE) * identity *
+              (sym(paste0("Sales(", unique(form$Digit), ")")) +
+                 `Growth%` + `Share%`),
             data = .)
 
   table.file <- as.matrix(table.file)
   table.file[table.file == "NA"] <- NA_character_
   table.file
-  write.xlsx(table.file, file = paste0(directory, '/', page, '.xlsx'), col.names = FALSE)
+  write.xlsx(table.file,
+             file = paste0(directory, '/', page, '.xlsx'),
+             col.names = FALSE)
 }
 
 

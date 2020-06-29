@@ -20,13 +20,13 @@ if (timer > 0 ) {
       }}
         newdf$month[i] <- mthindex
     }
-  
+
     if (newdf$month[timer]=='4'){
         yrindex <- as.numeric(ref.table$year[1])-1
     } else {
         yrindex <- as.numeric(ref.table$year[1])
     }
-  
+
     for (i in 1:timer) {
         key <- timer + 1 - i
         mthindex <- as.numeric(newdf$month[key])
@@ -41,18 +41,19 @@ if (timer > 0 ) {
         }
         newdf$year[key] <- yrindex
     }
-  
+
     if (type == 'MTH') {
-        newdf <- newdf %>% 
+        newdf <- newdf %>%
           mutate(period=paste0(year,str_sub(ref.table$period[1],3,3),month))
     } else {
-        newdf <- newdf %>% 
+        newdf <- newdf %>%
            mutate(period=paste0(year,str_sub(ref.table$period[1],3,3),
-                           month,str_sub(ref.table$period[1],5,nchar(ref.table$period[1]))))
+                           month,str_sub(ref.table$period[1],5,
+                                         nchar(ref.table$period[1]))))
     }
-  
+
     ncolnm <- c(newdf$period)
-    table2 <- data.frame(matrix(nrow=nrow(table.file),ncol=length(ncolnm))) 
+    table2 <- data.frame(matrix(nrow=nrow(table.file),ncol=length(ncolnm)))
     colnames(table2) <- ncolnm
     table.file <- cbind(table.file[,1],table2,table.file[,2:ncol(table.file)])
     }

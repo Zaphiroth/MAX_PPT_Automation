@@ -77,31 +77,31 @@ data <- raw.data %>%
 
 
 ##---- Generation function ----
-if (cylce==4) {
-  source("04_Codes/Maylan/02_MarketSizeQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/03_SubMarketShareQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/04_SubMarketGrowthQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/05_PerformanceQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/06_TrendQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/07_ShareTrendQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/08_RankingQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/09_RegionPerformanceQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/10_RegionTrendQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/11_CompetitorPerformanceQ.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/12_GrowthTrendQ.R", encoding = "UTF-8") 
+if (cycle==4) {
+  source("04_Codes/Mylan/02_MarketSizeQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/03_SubMarketShareQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/04_SubMarketGrowthQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/05_PerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/06_TrendQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/07_ShareTrendQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/08_RankingQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/09_RegionPerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/10_RegionTrendQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/11_CompetitorPerformanceQ.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/12_GrowthTrendQ.R", encoding = "UTF-8") 
 
 } else {
-  source("04_Codes/Maylan/02_MarketSize.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/03_SubMarketShare.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/04_SubMarketGrowth.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/05_Performance.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/06_Trend.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/07_ShareTrend.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/08_Ranking.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/09_RegionPerformance.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/10_RegionTrend.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/11_CompetitorPerformance.R", encoding = "UTF-8")
-  source("04_Codes/Maylan/12_GrowthTrend.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/02_MarketSize.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/03_SubMarketShare.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/04_SubMarketGrowth.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/05_Performance.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/06_Trend.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/07_ShareTrend.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/08_Ranking.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/09_RegionPerformance.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/10_RegionTrend.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/11_CompetitorPerformance.R", encoding = "UTF-8")
+  source("04_Codes/Mylan/12_GrowthTrend.R", encoding = "UTF-8")
 } 
 
 GenerateFile <- function(page,
@@ -196,7 +196,7 @@ map(unique(form.table$Page),
     GenerateFile,
     data = data,
     form.table = form.table,
-    directory = "05_Internal_Review/test1")
+    directory = "05_Internal_Review/test2")
 
 
 

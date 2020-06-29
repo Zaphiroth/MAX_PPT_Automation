@@ -52,14 +52,16 @@ DisplayFunction <- function(table.file, type) {
     }else{
       newdf <- newdf %>%
         mutate(period = paste0(year, str_sub(ref.table$period[1], 3, 3),
-                               month, str_sub(ref.table$period[1], 6, nchar(ref.table$period[1]))))
+                               month, str_sub(ref.table$period[1], 6,
+                                              nchar(ref.table$period[1]))))
     }
 
     ncolnm <- c(newdf$period)
     table2 <- data.frame(matrix(nrow = nrow(table.file),
                                 ncol = length(ncolnm)))
     colnames(table2) <- ncolnm
-    table.file <- cbind(table.file[, 1], table2, table.file[, 2:ncol(table.file)])
+    table.file <- cbind(table.file[, 1], table2,
+                        table.file[, 2:ncol(table.file)])
   }
   table.file
 }
