@@ -61,6 +61,9 @@ GenerateFile <- function(page,
   source(paste0(func.dir, "/GrowthTrend.R"), encoding = "UTF-8")
   source(paste0(func.dir, "/DisplayFunction.R"), encoding = "UTF-8")
 
+  data <- data %>%
+    mutate(Date = as.numeric(Date))
+
   if (type == "MarketSize") {
     print(page)
     MarketSize(data, form, page, digit, directory)
