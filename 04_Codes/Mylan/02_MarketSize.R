@@ -25,13 +25,14 @@ if(first.mth > 12) {first.mth <- first.mth -12}
 fdmth <- c(first.mth:12)
 ldmth <- c(1:last.mth)
 rowtimer <- length(fdmth) + length(ldmth) + (length(display.year)-2)*12
+
 if(last.mth == 12) {
-displayyr <- sort(c(rep(display.year,12)))} 
-else {
+displayyr <- sort(c(rep(display.year,12)))} else {
 displayyr <- c(rep(display.year[1],length(fdmth)),rep(display.year[2],12),
                rep(display.year[3],12),rep(display.year[4],12),rep(display.year[5],12),
                rep(display.year[6],length(ldmth)))                 
 }
+
 displaymth <- as.character(c(fdmth,rep(1:12,length(display.year)-2),ldmth))
 displaydf <- data.frame(year=displayyr,mth=displaymth) %>%
              mutate(period=paste0(year,"M", str_pad(mth,2,pad='0')))
