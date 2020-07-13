@@ -10,7 +10,8 @@ SubMarketGrowth <- function(data,
                             page,
                             digit,
                             directory) {
-  
+
+### Data Function
   dateformat <- data.frame(Date=sort(unique(data$Date)),Quarter=rep(NA,length(unique(data$Date))),
                            Year=rep(NA,length(unique(data$Date))))
   dateformat$Quarter <- as.numeric(substr(dateformat$Date[nrow(dateformat)],5,6))/3
@@ -28,8 +29,10 @@ SubMarketGrowth <- function(data,
   dataQ <- data %>% left_join(dateformat, by = "Date") %>% 
     mutate(MAT = paste0(Year,'Q', Quarter,' MAT'), YTD=paste0(Year,'Q', Quarter,' YTD')) %>%
     select(-Quarter, -Year)
-  
-  table.file <- dataQ %>% 
+ 
+
+### Main Table
+table.file <- dataQ %>% 
     group_by(period = !!sym(unique(form$Period)),
              sub_market = !!sym(unique(form$Summary1))) %>% 
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
@@ -38,17 +41,44 @@ SubMarketGrowth <- function(data,
     dcast(sub_market ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "Total") %>% 
     melt(id.vars = "sub_market", variable.factor = FALSE, 
-         variable.name = "period", value.name = "value") %>% 
+         variable.name = "period", value.name = "value")
+
+if (unique(form$Period)=='MTH') {   
+  table.file <- table.file  %>% 
+    mutate(month=str_sub(period,-2,-1),year=str_sub(period,1,2)) %>%
+    arrange(sub_market,month) %>% 
+    group_by(sub_market,month) %>%
+    mutate(growth = value / lag(value) - 1) %>% 
+    ungroup() %>%
+    mutate(period=paste0(year,'Q',as.numeric(month)/3)) 
+  
+} else {
+  
+  table.file <- table.file%>% 
     group_by(sub_market) %>% 
     arrange(period) %>% 
     mutate(growth = value / lag(value) - 1) %>% 
-    ungroup() %>% 
+    ungroup() 
+  
+}  
+  
+   table.file <- table.file %>% 
     filter(!is.na(growth)) %>% 
     setDT() %>% 
     dcast(sub_market ~ period, value.var = "growth") %>% 
     right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>% 
     rename("Growth%" = sub_market)
+
+
   
+### Display Function
+if (unique(form$Period)=='MTH') {
+     source("04_Codes/Maylan/14_DisplayFunctionQ.R", encoding = "UTF-8")
+     table.file <- DisplayFunction(table.file=table.file,type='MTH',dis_period=20)
+     colnames(table.file)[1] <- 'Growth%'
+     
+   } else {  
+   
   pdnm <- colnames(table.file[-1])
   if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
     pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)]
@@ -76,7 +106,9 @@ SubMarketGrowth <- function(data,
       table.file <- table.file[,-ncol(table.file)]
     }
   }
-  
+}
+
+
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
