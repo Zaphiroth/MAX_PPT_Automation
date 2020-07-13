@@ -4,18 +4,17 @@
 # Date:         2020-05-31
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-DisplayFunction <- function(table.file, type) {
+DisplayFunction <- function(table.file, type, dis_period=24
+) {
 
-  ref.table <- data.frame(period = colnames(table.file[-1])) %>%
-    mutate(month = str_sub(period, 4, 5),
-           year = str_sub(period, 1, 2))
-  timer <- 24 - nrow(ref.table)
+  ref.table <- data.frame(period=colnames(table.file[-1])) %>%
+    mutate(month=str_sub(period,4,5),year=str_sub(period,1,2))
+  timer <- dis_period - nrow(ref.table)
 
   if (timer > 0 ) {
-    newdf <- data.frame(month = rep(NA, timer),
-                        year=rep(NA, timer))
+    newdf <- data.frame(month=rep(NA,timer),year=rep(NA,timer))
     for (i in 1:timer) {
-      mthindex <- as.numeric(ref.table$month[nrow(ref.table)]) + i
+      mthindex <- as.numeric(ref.table$month[nrow(ref.table)])+i
       for (d in 1:2){
         if (mthindex > 12) {
           mthindex <- mthindex - 12
@@ -24,8 +23,8 @@ DisplayFunction <- function(table.file, type) {
       newdf$month[i] <- mthindex
     }
 
-    if (newdf$month[timer] == '12'){
-      yrindex <- as.numeric(ref.table$year[1]) - 1
+    if (newdf$month[timer]=='12'){
+      yrindex <- as.numeric(ref.table$year[1])-1
     } else {
       yrindex <- as.numeric(ref.table$year[1])
     }
@@ -36,7 +35,7 @@ DisplayFunction <- function(table.file, type) {
       if(key == timer){
         diff <- 1
       } else {
-        secindex <- as.numeric(newdf$month[key + 1])
+        secindex <- as.numeric(newdf$month[key+1])
         diff <- secindex - mthindex
       }
       if (diff != 1) {
@@ -45,23 +44,20 @@ DisplayFunction <- function(table.file, type) {
       newdf$year[key] <- yrindex
     }
 
-    if (type == 'MTH') {
+    if (type == 'MTH' & dis_period==24) {
       newdf <- newdf %>%
-        mutate(period = paste0(year, str_sub(ref.table$period[1], 3, 3), month))
+        mutate(period=paste0(year,str_sub(ref.table$period[1],3,3),month))
 
-    }else{
+    } else {
       newdf <- newdf %>%
-        mutate(period = paste0(year, str_sub(ref.table$period[1], 3, 3),
-                               month, str_sub(ref.table$period[1], 6,
-                                              nchar(ref.table$period[1]))))
+        mutate(period=paste0(year,str_sub(ref.table$period[1],3,3),
+                             month,str_sub(ref.table$period[1],6,nchar(ref.table$period[1]))))
     }
 
     ncolnm <- c(newdf$period)
-    table2 <- data.frame(matrix(nrow = nrow(table.file),
-                                ncol = length(ncolnm)))
+    table2 <- data.frame(matrix(nrow=nrow(table.file),ncol=length(ncolnm)))
     colnames(table2) <- ncolnm
-    table.file <- cbind(table.file[, 1], table2,
-                        table.file[, 2:ncol(table.file)])
+    table.file <- cbind(table.file[,1],table2,table.file[,2:ncol(table.file)])
   }
   table.file
 }
