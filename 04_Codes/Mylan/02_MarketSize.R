@@ -5,7 +5,6 @@
 # Date:         2020-05-18
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-
 MarketSize <- function(data,
                        form,
                        page,
@@ -25,14 +24,12 @@ if(first.mth > 12) {first.mth <- first.mth -12}
 fdmth <- c(first.mth:12)
 ldmth <- c(1:last.mth)
 rowtimer <- length(fdmth) + length(ldmth) + (length(display.year)-2)*12
-
 if(last.mth == 12) {
 displayyr <- sort(c(rep(display.year,12)))} else {
 displayyr <- c(rep(display.year[1],length(fdmth)),rep(display.year[2],12),
                rep(display.year[3],12),rep(display.year[4],12),rep(display.year[5],12),
                rep(display.year[6],length(ldmth)))                 
 }
-
 displaymth <- as.character(c(fdmth,rep(1:12,length(display.year)-2),ldmth))
 displaydf <- data.frame(year=displayyr,mth=displaymth) %>%
              mutate(period=paste0(year,"M", str_pad(mth,2,pad='0')))
@@ -48,11 +45,14 @@ display <- data.frame(period = display.date)
 
 
 ## Main Table 
-if (unique(form$Period)=='MTH') {    
-  table.file <- data %>% 
+table.file <- data %>% 
     group_by(period = !!sym(unique(form$Period))) %>% 
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
-    ungroup() %>%
+    ungroup() 
+  
+if (unique(form$Period)=='MTH') {    
+  
+  table.file <- table.file %>%
     mutate(month=str_sub(period,-2,-1),year=str_sub(period,1,2)) %>%
     arrange(month) %>% 
     group_by(month) %>%
@@ -65,23 +65,16 @@ if (unique(form$Period)=='MTH') {
            `Growth%` = growth)
   
 } else {
-  
-  table.file <- data %>% 
-    group_by(period = !!sym(unique(form$Period))) %>% 
-    summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>% 
-    ungroup() %>% 
+
+  table.file <- table.file %>% 
     arrange(period) %>% 
     mutate(growth = value / lag(value) - 1) %>% 
     right_join(display, by = "period") %>% 
     select(Period = period,
-           !!sym(paste0("Sales(", unique(form$Digit), ")")) := value,
+           !!sym(paste0("Value(", unique(form$Digit), ")")) := value,
            `Growth%` = growth)
 }
   
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
 }
-
-
-
-
