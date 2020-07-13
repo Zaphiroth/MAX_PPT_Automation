@@ -11,8 +11,8 @@ SubMarketGrowth <- function(data,
                             page,
                             digit,
                             directory) {
-  
-  table.file <- data %>% 
+
+table.file <- data %>% 
     group_by(period = !!sym(unique(form$Period)),
              sub_market = !!sym(unique(form$Summary1))) %>% 
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>% 
@@ -21,16 +21,40 @@ SubMarketGrowth <- function(data,
     dcast(sub_market ~ period, value.var = "value") %>% 
     adorn_totals("row", na.rm = TRUE, name = "Total") %>% 
     melt(id.vars = "sub_market", variable.factor = FALSE, 
-         variable.name = "period", value.name = "value") %>% 
+       variable.name = "period", value.name = "value")
+
+if (unique(form$Period)=='MTH') {    
+  table.file <- table.file  %>% 
+    mutate(month=str_sub(period,-2,-1),year=str_sub(period,1,2)) %>%
+    arrange(sub_market,month) %>% 
+    group_by(sub_market,month) %>%
+    mutate(growth = value / lag(value) - 1) %>% 
+    ungroup() 
+    
+} else {
+
+table.file <- table.file  %>% 
     group_by(sub_market) %>% 
     arrange(period) %>% 
     mutate(growth = value / lag(value) - 1) %>% 
-    ungroup() %>% 
-    filter(!is.na(growth)) %>% 
-    setDT() %>% 
-    dcast(sub_market ~ period, value.var = "growth") %>% 
-    right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>% 
-    rename("Growth%" = sub_market)
+    ungroup() 
+}
+
+table.file <- table.file %>% 
+     filter(!is.na(growth)) %>% 
+     setDT() %>% 
+     dcast(sub_market ~ period, value.var = "growth") %>% 
+     right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>% 
+     rename("Growth%" = sub_market)
+  
+
+## Display Fucntion  
+if (unique(form$Period)=='MTH') {
+    source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
+    table.file <- DisplayFunction(table.file=table.file,type='MTH',dis_period=60)
+    colnames(table.file)[1] <- 'Growth%'
+    
+  } else {  
   
   pdnm <- colnames(table.file[-1])
   if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
@@ -59,6 +83,7 @@ SubMarketGrowth <- function(data,
       table.file <- table.file[,-ncol(table.file)]
     }
   }
+}
   
   table.file
   write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))
