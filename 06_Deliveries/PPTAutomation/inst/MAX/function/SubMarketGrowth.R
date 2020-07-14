@@ -50,7 +50,6 @@ SubMarketGrowth <- function(data,
 
   ## Display Fucntion
   if (unique(form$Period)=='MTH') {
-    source("04_Codes/Maylan/14_DisplayFunction.R", encoding = "UTF-8")
     table.file <- DisplayFunction(table.file=table.file,type='MTH',dis_period=60)
     colnames(table.file)[1] <- 'Growth%'
 
