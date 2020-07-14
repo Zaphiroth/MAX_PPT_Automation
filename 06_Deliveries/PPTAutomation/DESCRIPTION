@@ -10,6 +10,7 @@ License: LGPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports:
+    pacman,
     zip,
     openxlsx,
     readxl,
@@ -28,6 +29,4 @@ Imports:
     digest,
     tables,
     zoo
-Suggests:
-    pacman
 RoxygenNote: 7.0.2
