@@ -7,7 +7,7 @@
 DisplayFunction <- function(table.file, type, dis_period=24
 ) {
 
-  ref.table <- data.frame(period=colnames(table.file[-1])) %>%
+  ref.table <- data.frame(period=colnames(table.file[,-1])) %>%
     mutate(month=str_sub(period,4,5),year=str_sub(period,1,2))
   timer <- dis_period - nrow(ref.table)
 

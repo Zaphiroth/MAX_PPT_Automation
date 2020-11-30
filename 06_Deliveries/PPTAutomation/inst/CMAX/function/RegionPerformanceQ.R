@@ -152,7 +152,8 @@ RegionPerformance <- function(data,
            region %in% form$Display) %>%
     bind_rows(table3) %>%
     mutate(region = factor(region, levels = table2$region)) %>%
-    right_join(distinct(table2, region), by = "region")
+    right_join(distinct(table2, region), by = "region") %>%
+    arrange(region)
 
 table4 <- table4 %>%
     mutate(period=unique(na.omit(table4$period))) %>%

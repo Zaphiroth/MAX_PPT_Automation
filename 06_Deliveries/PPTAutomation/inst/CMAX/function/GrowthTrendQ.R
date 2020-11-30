@@ -68,7 +68,9 @@ GrowthTrend <- function(data,
       arrange(sequence,summary) %>%
       select(-sequence) %>%
       rename(' ' = summary) %>%
-      right_join(distinct(form, Display), by = c(" " = "Display"))
+      mutate(` ` = factor(` `, levels = form$Display)) %>%
+      filter(!is.na(` `)) %>%
+      arrange(` `)
 
     table.file <- DisplayFunction(table.file=table.file,type='MTH')
     write.xlsx(table.file,paste0(directory,'/',page,'.xlsx'))

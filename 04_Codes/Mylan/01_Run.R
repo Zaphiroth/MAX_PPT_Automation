@@ -7,10 +7,10 @@
 
 
 ##---- Readin ----
-raw.data <- data.frame(read_excel("02_Inputs/Raw data-CMAX.xlsx"), 
+raw.data <- data.frame(read_excel("02_Inputs/Mylan_ELID_delivery_202009.xlsx"), 
                        check.names = FALSE)
 
-form.table <- data.frame(read_excel("03_Outputs/Form_table-CMAX.xlsx"), 
+form.table <- data.frame(read_excel("03_Outputs/Form_table_ELID.xlsx"), 
                          check.names = FALSE)
 
 

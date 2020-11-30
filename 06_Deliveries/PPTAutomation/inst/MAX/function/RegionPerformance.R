@@ -19,6 +19,7 @@ RegionPerformance <- function(data,
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
                 digit) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     setDT() %>%
     dcast(period + region ~ mnf_type, value.var = "sub_value", fill = 0) %>%
     mutate(complete_value = MNC + LOCAL) %>%
@@ -46,6 +47,7 @@ RegionPerformance <- function(data,
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
                 digit) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     setDT() %>%
     dcast(period + region ~ mnf_type, value.var = "sub_value", fill = 0) %>%
     mutate(complete_value = MNC + LOCAL) %>%
@@ -79,6 +81,7 @@ RegionPerformance <- function(data,
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
                 digit) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     group_by(period, region) %>%
     mutate(complete_value = sum(sub_value, na.rm = TRUE)) %>%
     ungroup() %>%
@@ -109,6 +112,7 @@ RegionPerformance <- function(data,
     summarise(sub_value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
                 digit) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     group_by(period, region) %>%
     mutate(complete_value = sum(sub_value, na.rm = TRUE)) %>%
     ungroup() %>%
@@ -127,8 +131,9 @@ RegionPerformance <- function(data,
     filter(period == max(period, na.rm = TRUE),
            region %in% form$Display) %>%
     bind_rows(table3) %>%
-    mutate(region = factor(region, levels = table2$region)) %>%
+    mutate(region = factor(region, levels = as.character(table2$region))) %>%
     right_join(distinct(table2, region), by = "region") %>%
+    arrange(region) %>%
     mutate(type = paste0("Internal Product Performance ",
                          first(na.omit(period)))) %>%
     select(region,

@@ -50,7 +50,8 @@ RegionTrend <- function(data,
     summarise(Value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>%
     mutate (Value= Value/digit) %>%
-    filter(period %in% tail(unique(period),12)) %>%
+    filter(!is.na(period),
+           period %in% tail(unique(period),12)) %>%
     mutate(month=str_sub(period,-1,-1),year=str_sub(period,1,2)) %>%
     group_by(period) %>%
     mutate (total=sum(Value, na.rm = TRUE)) %>%

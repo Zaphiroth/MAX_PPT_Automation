@@ -23,6 +23,7 @@ RegionTrend <- function(data,
                region = !!sym(unique(form$Summary1))) %>%
       summarise(Value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
       ungroup() %>%
+      filter(!is.na(period)) %>%
       mutate (Value = Value/digit) %>%
       filter(period %in% tail(unique(period), 36)) %>%
       mutate(month = str_sub(period, -2, -1),

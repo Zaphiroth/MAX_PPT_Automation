@@ -72,7 +72,8 @@ MarketSize <- function(data,
   table.file <- dataQ %>%
     group_by(period = !!sym(unique(form$Period))) %>%
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) / digit) %>%
-    ungroup()
+    ungroup() %>%
+    filter(is.na(period))
 
   if (unique(form$Period)=='MTH') {
 
@@ -84,7 +85,9 @@ MarketSize <- function(data,
       ungroup() %>%
       arrange(year,month) %>%
       mutate(period=paste0(year,'Q',as.numeric(month)/3)) %>%
-      right_join(display, by = "period") %>%
+      mutate(period = factor(period, levels = display$period)) %>%
+      filter(!is.na(period)) %>%
+      arrange(period) %>%
       select(Period = period,
              !!sym(paste0("Value(", unique(form$Digit), ")")) := value,
              `Growth%` = growth)
@@ -94,7 +97,9 @@ MarketSize <- function(data,
     table.file <- table.file %>%
       arrange(period) %>%
       mutate(growth = value / lag(value) - 1) %>%
-      right_join(display, by = "period") %>%
+      mutate(period = factor(period, levels = display$period)) %>%
+      filter(!is.na(period)) %>%
+      arrange(period) %>%
       select(Period = period,
              !!sym(paste0("Value(", unique(form$Digit), ")")) := value,
              `Growth%` = growth)

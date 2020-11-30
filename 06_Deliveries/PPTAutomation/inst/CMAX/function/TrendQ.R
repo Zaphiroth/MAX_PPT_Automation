@@ -55,10 +55,13 @@ Trend <- function(data,
       summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE) /
                   digit) %>%
       ungroup() %>%
+      filter(!is.na(period)) %>%
       arrange(period) %>%
       setDT() %>%
       dcast(summary ~ period, value.var = "value") %>%
-      right_join(distinct(form, Display), by = c("summary" = "Display")) %>%
+      mutate(summary = factor(summary, levels = unique(form$Display))) %>%
+      filter(!is.na(summary)) %>%
+      arrange(summary)
       rename(` ` = summary)
 
   } else  {

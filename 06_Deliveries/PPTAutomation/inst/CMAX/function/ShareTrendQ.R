@@ -55,12 +55,15 @@ ShareTrend <- function(data,
       group_by(period = !!sym(unique(form$Period)), summary) %>%
       summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
       ungroup() %>%
+      filter(!is.na(period)) %>%
       group_by(period) %>%
       mutate(value_share = value / sum(value, na.rm = TRUE)) %>%
       ungroup() %>%
       setDT() %>%
       dcast(summary ~ period, value.var = "value_share") %>%
-      right_join(distinct(form, Display), by = c("summary" = "Display")) %>%
+      mutate(summary = factor(summary, levels = form$Display)) %>%
+      filter(!is.na(summary)) %>%
+      arrange(summary) %>%
       rename(!!sym(' ') := summary)
 
   } else {

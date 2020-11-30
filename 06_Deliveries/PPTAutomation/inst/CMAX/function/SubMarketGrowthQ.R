@@ -37,6 +37,7 @@ SubMarketGrowth <- function(data,
              sub_market = !!sym(unique(form$Summary1))) %>%
     summarise(value = sum(!!sym(unique(form$Calculation)), na.rm = TRUE)) %>%
     ungroup() %>%
+    filter(!is.na(period)) %>%
     setDT() %>%
     dcast(sub_market ~ period, value.var = "value") %>%
     adorn_totals("row", na.rm = TRUE, name = "Total") %>%
@@ -66,7 +67,9 @@ SubMarketGrowth <- function(data,
     filter(!is.na(growth)) %>%
     setDT() %>%
     dcast(sub_market ~ period, value.var = "growth") %>%
-    right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>%
+    mutate(sub_market = factor(sub_market, levels = form$Display)) %>%
+    filter(!is.na(sub_market)) %>%
+    arrange(sub_market) %>%
     rename("Growth%" = sub_market)
 
 
@@ -78,7 +81,7 @@ SubMarketGrowth <- function(data,
 
   } else {
 
-    pdnm <- colnames(table.file[-1])
+    pdnm <- colnames(table.file[,-1])
     if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
       pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)]
     }
@@ -98,9 +101,9 @@ SubMarketGrowth <- function(data,
       ncolnm <- length(unique(newdf$pd))
       adddf <- data.frame(matrix(nrow=nrow(table.file),ncol=ncolnm))
       colnames(adddf) <- unique(newdf$pd)
-      table.file <- cbind(table.file[1],adddf,table.file[-1])
+      table.file <- cbind(table.file[,1],adddf,table.file[,-1])
 
-      cdnm <- colnames(table.file[-1])
+      cdnm <- colnames(table.file[,-1])
       if (length(grep("^(?=\\bNA\\b).*",cdnm,value = TRUE, perl = TRUE)) != 0) {
         table.file <- table.file[,-ncol(table.file)]
       }

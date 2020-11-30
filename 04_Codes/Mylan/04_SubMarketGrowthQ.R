@@ -79,7 +79,7 @@ if (unique(form$Period)=='MTH') {
      
    } else {  
    
-  pdnm <- colnames(table.file[-1])
+  pdnm <- colnames(table.file[,-1])
   if (length(grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)) != 0) {
     pdnm <- pdnm[pdnm != grep("^(?=\\bNA\\b).*",pdnm,value = TRUE, perl = TRUE)]
   }
@@ -99,9 +99,9 @@ if (unique(form$Period)=='MTH') {
     ncolnm <- length(unique(newdf$pd))
     adddf <- data.frame(matrix(nrow=nrow(table.file),ncol=ncolnm)) 
     colnames(adddf) <- unique(newdf$pd)
-    table.file <- cbind(table.file[1],adddf,table.file[-1])
+    table.file <- cbind(table.file[,1],adddf,table.file[,-1])
     
-    cdnm <- colnames(table.file[-1])
+    cdnm <- colnames(table.file[,-1])
     if (length(grep("^(?=\\bNA\\b).*",cdnm,value = TRUE, perl = TRUE)) != 0) {
       table.file <- table.file[,-ncol(table.file)]
     }
