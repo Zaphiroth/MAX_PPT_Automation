@@ -20,6 +20,9 @@ GenerateFile <- function(page,
     distinct(Type) %>%
     unlist()
 
+  data <- data %>%
+    mutate(Date = as.numeric(Date))
+
   if (!is.na(unique(form$Restriction))) {
     restriction <- stri_split_fixed(unique(form$Restriction), ",",
                                     simplify = TRUE) %>%
@@ -60,9 +63,6 @@ GenerateFile <- function(page,
   source(paste0(func.dir, "/CompetitorPerformance.R"), encoding = "UTF-8")
   source(paste0(func.dir, "/GrowthTrend.R"), encoding = "UTF-8")
   source(paste0(func.dir, "/DisplayFunction.R"), encoding = "UTF-8")
-
-  data <- data %>%
-    mutate(Date = as.numeric(Date))
 
   if (type == "MarketSize") {
     print(page)

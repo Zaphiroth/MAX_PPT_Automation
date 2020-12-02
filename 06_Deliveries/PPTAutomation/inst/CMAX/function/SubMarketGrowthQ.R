@@ -67,11 +67,11 @@ SubMarketGrowth <- function(data,
     filter(!is.na(growth)) %>%
     setDT() %>%
     dcast(sub_market ~ period, value.var = "growth") %>%
+    right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>%
     mutate(sub_market = factor(sub_market, levels = form$Display)) %>%
     filter(!is.na(sub_market)) %>%
     arrange(sub_market) %>%
     rename("Growth%" = sub_market)
-
 
 
   ### Display Function

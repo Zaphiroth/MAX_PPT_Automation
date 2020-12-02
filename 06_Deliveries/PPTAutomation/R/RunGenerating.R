@@ -90,7 +90,6 @@ RunGenerating <- function(inst,
 
   latest.date <- sort(unique(raw.data$Date), decreasing = TRUE)
 
-
   mat.date <- data.frame(Date = sort(unique(raw.data$Date))) %>%
     mutate(ymd = ymd(stri_paste(Date, "01")),
            MAT = case_when(

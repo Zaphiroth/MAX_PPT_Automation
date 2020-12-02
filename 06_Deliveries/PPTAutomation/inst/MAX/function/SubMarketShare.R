@@ -66,6 +66,7 @@ SubMarketShare <- function(data,
     mutate(index = ifelse(index == "value", "", "Share")) %>%
     unite(period_index, period, index, sep = " ") %>%
     mutate(period_index = trimws(period_index)) %>%
+    right_join(display, by = c("period_index", "sub_market")) %>%
     mutate(period_index = factor(period_index, levels = unique(display$period_index)),
            sub_market = factor(sub_market, levels = unique(display$sub_market))) %>%
     filter(!is.na(period_index), !is.na(sub_market)) %>%
@@ -81,6 +82,7 @@ SubMarketShare <- function(data,
       select(sub_market,
              colnum,
              ends_with("Share")) %>%
+      right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>%
       mutate(sub_market = factor(sub_market, levels = unique(form$Display))) %>%
       filter(!is.na(sub_market)) %>%
       arrange(sub_market)
@@ -91,6 +93,7 @@ SubMarketShare <- function(data,
       select(sub_market,
              ends_with(unique(form$Period)),
              ends_with("Share")) %>%
+      right_join(distinct(form, Display), by = c("sub_market" = "Display")) %>%
       mutate(sub_market = factor(sub_market, levels = unique(form$Display))) %>%
       filter(!is.na(sub_market)) %>%
       arrange(sub_market)
